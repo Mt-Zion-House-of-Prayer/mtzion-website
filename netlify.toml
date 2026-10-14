@@ -1,5 +1,36 @@
 [build]
   publish = "."
+  command = "python3 scripts/build_feed.py"   # writes podcast.xml from data/sermons.json
+
+[functions]
+  directory = "netlify/functions"
+
+# Internal files that live in the repo but shouldn't be served as web pages
+[[redirects]]
+  from = "/CLAUDE.md"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/README.md"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/netlify.toml"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/scripts/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404.html"
+  status = 404
+  force = true
 
 # Bulletin PDFs never change once posted
 [[headers]]
@@ -7,8 +38,19 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
-# Lists must refresh as soon as a new sermon/bulletin is added
+# Lists and the podcast feed must refresh as soon as something is posted
 [[headers]]
   for = "/data/*"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+[[headers]]
+  for = "/podcast.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "application/rss+xml; charset=utf-8"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"

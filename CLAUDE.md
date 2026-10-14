@@ -43,6 +43,33 @@ The header and footer are copied into all four HTML pages. A change to the nav,
 address, or service times must be made in **every** page (and the hero/visit text
 where times appear). Grep for the old text to find every copy.
 
+## Admin page (sermon + bulletin uploads)
+
+`/admin/` (linked as "Admin" in the footer) lets volunteers post without Claude:
+one shared password (kept in the church's 1Password vault) plus their name, which
+is recorded in each commit message.
+
+- `admin/index.html` — the page. Sermon flow: `admin-upload-url` returns a presigned
+  link → the browser PUTs the MP3 straight to Cloudflare R2 → `admin-add-sermon`
+  adds the entry to `data/sermons.json`. Bulletins go through `admin-add-bulletin`
+  (PDF ≤ 4 MB, committed into `bulletins/`). `admin-remove` takes either back off.
+- `netlify/functions/*.mjs` + `netlify/lib/shared.mjs` — no npm dependencies.
+  Each function commits to GitHub through the API, which triggers a redeploy.
+- Settings live in Netlify environment variables (listed at the top of
+  `netlify/lib/shared.mjs`), never in the repo. `GITHUB_BRANCH` can point the
+  functions at a test branch.
+- Test locally: `ADMIN_PASSWORD=x GITHUB_BRANCH=<test-branch> GITHUB_TOKEN=... netlify dev --offline`
+  — never test against `main`, every commit there goes live.
+
+## Podcast
+
+`scripts/build_feed.py` runs on every Netlify deploy and writes `podcast.xml` from
+`data/sermons.json` + `data/podcast.json` (show title, owner email, cover art).
+Apple Podcasts / Spotify poll that feed. Each sermon's `guid` is its permanent
+episode ID — never change or reuse one, or apps re-download/duplicate episodes.
+`size` (bytes) and `length` should be set for every entry. Cover art:
+`images/podcast-cover.jpg` (3000×3000).
+
 ## Common tasks
 
 **Add this week's bulletin:** save the PDF as `bulletins/YYYY-MM-DD.pdf` (Sunday's
@@ -56,10 +83,10 @@ anything older, and `.github/workflows/prune-bulletins.yml` runs
 `scripts/prune_bulletins.py` every Monday to delete older PDFs and their JSON
 entries, then commits — which redeploys the site. Don't re-add old bulletins.
 
-**Add a sermon:** add an entry at the TOP of `data/sermons.json` with `date`,
-`title`, `speaker`, `type` ("Sunday Message"), `passage` (may be ""), `length`
-("00:36:23" style, may be ""), and `audio` (a direct URL to the MP3). Keep
-newest-first. Use speaker names exactly as they already appear so the filter
+**Add a sermon:** normally done on the Admin page. By hand: add an entry to
+`data/sermons.json` (newest-first) with `date`, `title`, `speaker`, `type`
+("Sunday Message"), `passage` (may be ""), `length` ("00:36:23"), `audio` (direct
+MP3 URL), `size` (bytes), and a new unique `guid`. Use speaker names exactly as they already appear so the filter
 groups them (it's "Chris Geiser", not "Cris").
 
 **Change service times / address:** update all four HTML pages (hero, footer,

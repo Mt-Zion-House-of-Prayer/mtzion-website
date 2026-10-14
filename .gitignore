@@ -1,2 +1,5 @@
 .DS_Store
 *.mp3
+podcast.xml
+.netlify/
+.env
