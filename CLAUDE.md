@@ -36,7 +36,8 @@ only real Mt Zion photos so far. More photos of people and services would help m
 | `bulletins.html` | Bulletins by year (filled from `data/bulletins.json`) |
 | `css/style.css` | All styling. Colors are variables at the top |
 | `js/site.js` | Renders the lists. Rarely needs editing |
-| `bulletins/` | Bulletin PDFs, named `YYYY-MM-DD.pdf` (the Sunday date) |
+| `bulletins/` | Bulletin PDFs, named `YYYY-MM-DD.pdf` (the Sunday date). Last 3 months only |
+| `scripts/prune_bulletins.py` | Weekly cleanup of bulletins older than 3 months |
 
 The header and footer are copied into all four HTML pages. A change to the nav,
 address, or service times must be made in **every** page (and the hero/visit text
@@ -48,6 +49,12 @@ where times appear). Grep for the old text to find every copy.
 date), then add `{"date": "YYYY-MM-DD", "file": "bulletins/YYYY-MM-DD.pdf"}` at the
 TOP of `data/bulletins.json`. The list must stay newest-first — the home page
 shows the first entry as "this week's".
+
+**Bulletins only stay up for 3 months** (church decision, Oct 2026 — they contain
+birthdays, phone numbers, attendance and offering totals). The bulletins page hides
+anything older, and `.github/workflows/prune-bulletins.yml` runs
+`scripts/prune_bulletins.py` every Monday to delete older PDFs and their JSON
+entries, then commits — which redeploys the site. Don't re-add old bulletins.
 
 **Add a sermon:** add an entry at the TOP of `data/sermons.json` with `date`,
 `title`, `speaker`, `type` ("Sunday Message"), `passage` (may be ""), `length`
@@ -75,6 +82,6 @@ visit cards, map links). Times appear as "9:30 AM" and "10:30 AM".
 - 251 sermons imported into `data/sermons.json`. `audio` URLs still point at
   `mtzionhouseofprayer.org/wp-content/uploads/sermons/...` — they must be moved to
   the podcast host and the URLs rewritten BEFORE the old WordPress hosting is shut off.
-- 166 bulletins imported as PDFs (Nov 2019 – Oct 2026). Gaps (late 2021 – late
-  2024, Jul–Sep 2026) are gaps on the old site too.
+- 166 bulletins were imported, then pruned to the last 3 months (see above). The
+  full archive still exists on the old WordPress site until it is shut down.
 - Old site's About/Watch pages were template filler; no real content to carry over.

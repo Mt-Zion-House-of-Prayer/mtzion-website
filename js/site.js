@@ -83,13 +83,18 @@ async function initSermons() {
 async function initBulletins() {
   const box = document.getElementById("bulletin-list");
   if (!box) return;
-  const all = await load("bulletins");
-  const years = {};
-  all.forEach(b => (years[b.date.slice(0, 4)] ||= []).push(b));
-  box.innerHTML = Object.keys(years).sort().reverse().map(y => `
-    <div class="year"><h2>${y}</h2><div class="bulletins">
-      ${years[y].map(b => `<a href="${esc(b.file)}" target="_blank" rel="noopener">${fmtDate(b.date).replace(/, \d{4}$/, "")}</a>`).join("")}
-    </div></div>`).join("");
+  // Only the last 3 months are shown. A weekly GitHub job (scripts/prune_bulletins.py)
+  // also deletes older PDFs, so this filter just covers the days in between.
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - 3);
+  const recent = (await load("bulletins")).filter(b => {
+    const [y, m, d] = b.date.split("-").map(Number);
+    return new Date(y, m - 1, d) >= cutoff;
+  });
+  box.innerHTML = recent.length
+    ? `<div class="bulletins">${recent.map(b =>
+        `<a href="${esc(b.file)}" target="_blank" rel="noopener">${fmtDate(b.date)}</a>`).join("")}</div>`
+    : `<p class="empty">No recent bulletins posted.</p>`;
 }
 
 // Phone menu (the ☰ button)

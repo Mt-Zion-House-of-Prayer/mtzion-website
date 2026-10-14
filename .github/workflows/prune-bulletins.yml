@@ -1,0 +1,24 @@
+# Every Monday, delete bulletins older than 3 months and publish the change.
+name: Remove old bulletins
+on:
+  schedule:
+    - cron: "0 12 * * 1"   # Mondays, 7-8 AM Ohio time
+  workflow_dispatch: {}     # also allows a manual run from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/prune_bulletins.py
+      - name: Commit if anything changed
+        run: |
+          git add -A bulletins data/bulletins.json
+          if git diff --cached --quiet; then echo "Nothing to remove."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Remove bulletins older than 3 months"
+          git push
