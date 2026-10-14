@@ -5,6 +5,16 @@ Utica, OH 43080. Plain HTML/CSS/JS, no build step, hosted on Netlify from GitHub
 The people updating it are NOT coders. Explain changes in plain words, keep edits
 small, and always show the result in the preview before committing.
 
+## Hosting
+
+- Code: https://github.com/Mt-Zion-House-of-Prayer/mtzion-website (public — Netlify's
+  free plan can't deploy private org repos). Anything committed here is public.
+- Live: https://mtzionhouseofprayer.netlify.app (Netlify project `mtzionhouseofprayer`,
+  in Austin's personal Netlify team). Every push to `main` deploys automatically in
+  about a minute — so preview locally first; there is no staging step.
+- The real domain `mtzionhouseofprayer.org` still points at the old WordPress site.
+  Don't move it until sermon audio is off WordPress (see Migration status).
+
 ## Design
 
 The page *format* is modeled on our mother church's site, Gospel Haven
