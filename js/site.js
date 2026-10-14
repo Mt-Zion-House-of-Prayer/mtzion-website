@@ -47,8 +47,10 @@ async function initHome() {
   }
   if (b) {
     const [latest] = await load("bulletins");
-    if (latest) b.innerHTML = `<p>Bulletin for <strong>${fmtDate(latest.date)}</strong></p>
-      <a class="btn" href="${esc(latest.file)}" target="_blank" rel="noopener">Open bulletin</a>`;
+    b.innerHTML = latest
+      ? `<p>Bulletin for <strong>${fmtDate(latest.date)}</strong></p>
+      <a class="btn" href="${esc(latest.file)}" target="_blank" rel="noopener">Open bulletin</a>`
+      : `<p class="meta">No bulletin posted yet this week.</p>`;
   }
 }
 
