@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sermons · Mt Zion House of Prayer</title>
+<meta name="description" content="Mt Zion House of Prayer is a Mennonite church in Utica, Ohio. Sunday School 9:30 AM, Worship 10:30 AM. All are welcome.">
+<link rel="icon" href="images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- HEADER (same on every page) -->
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html"><img src="images/logo.png" alt="Mt Zion House of Prayer, Mennonite Church" width="1500" height="682"></a>
+    <button class="menu-btn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="site-nav">
+      <a href="visit.html">Visit</a>
+      <a href="sermons.html" aria-current="page">Sermons</a>
+      <a href="bulletins.html">Bulletins</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero small">
+    <div class="wrap"><h1>Sermons</h1><p>Messages from Sunday mornings at Mt Zion</p></div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="filters">
+        <input id="sermon-search" type="search" placeholder="Search by title or Scripture…" aria-label="Search sermons">
+        <select id="sermon-speaker" aria-label="Filter by speaker"><option value="">All speakers</option></select>
+      </div>
+      <ul class="list" id="sermon-list"><li class="empty">Loading sermons…</li></ul>
+      <div class="more" id="sermon-more" hidden><button class="btn outline">Show more</button></div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER (same on every page) -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>Come for a visit!</h4>
+        <p>Whether you've followed Jesus for years or are just curious, you're welcome at Mt Zion. Join us Sunday morning for Sunday School and worship.</p>
+      </div>
+      <div>
+        <h4>Sundays</h4>
+        <p>Sunday School · 9:30 AM<br>Worship · 10:30 AM</p>
+      </div>
+      <div>
+        <h4>Find us</h4>
+        <p>20875 Clutter Rd<br>Utica, OH 43080<br><a href="https://www.google.com/maps/dir/?api=1&destination=20875+Clutter+Rd+Utica+OH+43080">Directions</a> · <a href="https://www.facebook.com/MtZionHOP/">Facebook</a></p>
+      </div>
+    </div>
+    <p class="fine">Mt Zion House of Prayer · Mennonite Church · Utica, Ohio</p>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+</body>
+</html>

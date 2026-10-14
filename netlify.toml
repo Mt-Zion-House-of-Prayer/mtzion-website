@@ -1,0 +1,14 @@
+[build]
+  publish = "."
+
+# Bulletin PDFs never change once posted
+[[headers]]
+  for = "/bulletins/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Lists must refresh as soon as a new sermon/bulletin is added
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
