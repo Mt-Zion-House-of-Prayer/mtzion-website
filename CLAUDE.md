@@ -94,9 +94,8 @@ visit cards, map links). Times appear as "9:30 AM" and "10:30 AM".
 
 ## Rules
 
-- Never commit audio files. Sermon MP3s are ~25 MB each; audio lives on the
-  podcast host (or, until that's set up, the old WordPress site) and is linked
-  by URL.
+- Never commit audio files. Sermon MP3s (~25 MB each) live in Cloudflare R2 and
+  are linked by URL.
 - Keep it dependency-free: no frameworks, no npm, no build step.
 - Preview locally before committing: `python3 -m http.server 8000` in this folder,
   then open http://localhost:8000 (the lists use fetch, so opening the HTML file
@@ -106,9 +105,13 @@ visit cards, map links). Times appear as "9:30 AM" and "10:30 AM".
 
 ## Migration status (from the old WordPress site, Oct 2026)
 
-- 251 sermons imported into `data/sermons.json`. `audio` URLs still point at
-  `mtzionhouseofprayer.org/wp-content/uploads/sermons/...` — they must be moved to
-  the podcast host and the URLs rewritten BEFORE the old WordPress hosting is shut off.
+- 251 sermons moved to Cloudflare R2 bucket `mtzion-sermons` (Oct 2026, 7.0 GB,
+  byte-for-byte verified). Nothing on the site depends on WordPress any more.
+  Audio URLs use the temporary r2.dev address; when the domain's DNS moves to
+  Cloudflare, attach `media.mtzionhouseofprayer.org` to the bucket, update
+  `MEDIA_BASE_URL` in Netlify, and rewrite the `audio` URLs in sermons.json
+  (keep every `guid` unchanged).
+- R2 free tier is 10 GB; the archive is 7 GB and grows ~1 GB/year.
 - 166 bulletins were imported, then pruned to the last 3 months (see above). The
   full archive still exists on the old WordPress site until it is shut down.
 - Old site's About/Watch pages were template filler; no real content to carry over.
