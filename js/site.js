@@ -99,6 +99,28 @@ async function initBulletins() {
     : `<p class="empty">No recent bulletins posted.</p>`;
 }
 
+// "Listen on Apple Podcasts / Spotify" links. Hidden until the show's addresses are
+// filled in data/podcast.json (apple_url, spotify_url) — then they appear everywhere.
+async function initListenLinks() {
+  const cfg = await fetch("data/podcast.json").then(r => r.json()).catch(() => ({}));
+  const icon = {
+    apple: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#9933CC"/><circle cx="12" cy="10" r="2.6" fill="#fff"/><path d="M10.6 14h2.8l-.5 5.5h-1.8z" fill="#fff"/><path d="M7.3 13.8a5.6 5.6 0 1 1 9.4 0" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>',
+    spotify: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M6.5 9.3c3.8-1.1 8-.8 11.2 1M7.2 12.4c3.1-.9 6.4-.6 9.1.9M7.9 15.3c2.4-.6 4.9-.4 6.9.7" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>',
+  };
+  const links = [["apple", "Apple Podcasts", cfg.apple_url], ["spotify", "Spotify", cfg.spotify_url]]
+    .filter(([, , url]) => url)
+    .map(([k, name, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${icon[k]}${name}</a>`);
+  if (!links.length) return;
+  document.querySelectorAll(".listen-links").forEach(el => {
+    el.innerHTML = `<span class="label">Subscribe:</span>${links.join("")}`;
+    el.hidden = false;
+  });
+  document.querySelectorAll(".footer-podcast").forEach(el => {
+    el.innerHTML = [["Apple Podcasts", cfg.apple_url], ["Spotify", cfg.spotify_url]]
+      .filter(([, u]) => u).map(([n, u]) => ` · <a href="${esc(u)}">${n}</a>`).join("");
+  });
+}
+
 // Phone menu (the ☰ button)
 const menuBtn = document.querySelector(".menu-btn");
 if (menuBtn) menuBtn.addEventListener("click", () => {
@@ -107,5 +129,6 @@ if (menuBtn) menuBtn.addEventListener("click", () => {
 });
 
 initHome();
+initListenLinks();
 initSermons();
 initBulletins();

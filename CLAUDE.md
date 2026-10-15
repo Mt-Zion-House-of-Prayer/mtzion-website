@@ -67,7 +67,11 @@ is recorded in each commit message.
 `data/sermons.json` + `data/podcast.json` (show title, owner email, cover art).
 Apple Podcasts / Spotify poll that feed. Each sermon's `guid` is its permanent
 episode ID — never change or reuse one, or apps re-download/duplicate episodes.
-`size` (bytes) and `length` should be set for every entry. Cover art:
+`size` (bytes) and `length` should be set for every entry.
+
+"Subscribe: Apple Podcasts · Spotify" links appear on the Sermons page, the home
+page's Latest sermon box, and the footer — but only once `apple_url` /
+`spotify_url` are filled in `data/podcast.json` (show-level links, not per sermon). Cover art:
 `images/podcast-cover.jpg` (3000×3000).
 
 ## Common tasks

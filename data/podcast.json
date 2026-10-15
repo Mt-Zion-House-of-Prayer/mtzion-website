@@ -9,5 +9,7 @@
  "cover": "images/podcast-cover.jpg",
  "language": "en-us",
  "category": "Religion & Spirituality",
- "subcategory": "Christianity"
+ "subcategory": "Christianity",
+ "apple_url": "",
+ "spotify_url": ""
 }
