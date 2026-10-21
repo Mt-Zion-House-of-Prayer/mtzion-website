@@ -9,19 +9,18 @@ small, and always show the result in the preview before committing.
 
 - Code: https://github.com/Mt-Zion-House-of-Prayer/mtzion-website (public — Netlify's
   free plan can't deploy private org repos). Anything committed here is public.
-- Live: https://mtzionhouseofprayer.netlify.app (Netlify project `mtzionhouseofprayer`,
+- Live: https://mtzionhouseofprayer.org (since Oct 21, 2026; also mtzionhouseofprayer.netlify.app). Netlify project `mtzionhouseofprayer`,
   in Austin's personal Netlify team). Every push to `main` deploys automatically in
   about a minute — so preview locally first; there is no staging step.
-- The real domain `mtzionhouseofprayer.org` still points at the old WordPress site.
-  Don't move it until sermon audio is off WordPress (see Migration status).
+- DNS (Cloudflare): `@` CNAME apex-loadbalancer.netlify.com and `www` CNAME
+  mtzionhouseofprayer.netlify.app, both DNS-only (gray cloud) so Netlify's cert works.
 
 ## Domain & email
 
 - `mtzionhouseofprayer.org` is registered at **Cloudflare** in the church's name
   (moved from IONOS Oct 2026; auto-renews each Sept; owner contact mtzhop@gmail.com).
   Cloudflare login = "Sign in with GitHub" as the church `mtzhop` GitHub account.
-- DNS is in the same Cloudflare account. Website A/AAAA records still point at the
-  old IONOS host until the site cutover.
+- DNS is in the same Cloudflare account. The website records point at Netlify (see Hosting).
 - **Email:** Cloudflare Email Routing (forward-only, free). `admin@` and a catch-all
   (every other address, incl. `donations@`) forward to `mtzhop@gmail.com`. No one
   can *send* as @mtzionhouseofprayer.org — that would need a mailbox service.
