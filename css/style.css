@@ -184,7 +184,8 @@ section { padding: 64px 0; }
   .hero.small .wrap { padding-top: 60px; padding-bottom: 60px; }
   section { padding: 44px 0; }
   /* On phones the tiles become full-width bars, like Gospel Haven's mobile site */
-  .tiles { grid-template-columns: 1fr; gap: 0; margin: 0 -20px; }
+  .tiles { grid-template-columns: 1fr; gap: 0; }
+  .wrap.tiles { padding: 0; max-width: none; }   /* full-width bars without spilling past the screen */
   .tile { flex-direction: row; justify-content: flex-start; gap: 18px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 18px 32px; font-size: 1.5rem; }
   .tile:first-child { border-top: 1px solid var(--line); }
   .tile svg { width: 40px; height: 40px; }
