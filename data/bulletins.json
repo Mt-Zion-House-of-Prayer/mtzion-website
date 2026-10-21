@@ -1,5 +1,83 @@
 [
  {
+  "date": "2026-10-25",
+  "service": [
+   [
+    "Moderator",
+    "Larry"
+   ],
+   [
+    "Offering",
+    "Building Fund"
+   ],
+   [
+    "Prayer & Praise",
+    "Worship Team(Jonny)"
+   ],
+   [
+    "Kingdom Family Prayer Focus",
+    "Rebecca Mullett, Becky Otto"
+   ],
+   [
+    "Message",
+    "Brendan Miller"
+   ],
+   [
+    "Host Family",
+    "Joe & Elsie Miller"
+   ]
+  ],
+  "sunday_school": [
+   [
+    "Women's",
+    ""
+   ],
+   [
+    "Men's",
+    ""
+   ]
+  ],
+  "next": {
+   "date": "2026-11-01",
+   "service": [
+    [
+     "Moderator",
+     "Cris"
+    ],
+    [
+     "Offering",
+     "Mission Fund"
+    ],
+    [
+     "Prayer & Praise",
+     ""
+    ],
+    [
+     "Kingdom Family Prayer Focus",
+     "Tyler & Megan Miller"
+    ],
+    [
+     "Message",
+     "Brendan Miller"
+    ],
+    [
+     "Host Family",
+     "Kenlyn & Mary Sue Miller"
+    ]
+   ],
+   "sunday_school": [
+    [
+     "Women's",
+     ""
+    ],
+    [
+     "Men's",
+     ""
+    ]
+   ]
+  }
+ },
+ {
   "date": "2026-10-18",
   "service": [
    [
