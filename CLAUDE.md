@@ -100,6 +100,14 @@ Focus); empty values are hidden. The source bulletin is a Google Doc rendered to
 PDF whose text is all images, so it must be *read*, not text-extracted. Entries
 older than 3 months are pruned weekly by `.github/workflows/prune-bulletins.yml`.
 
+**Weekly automation:** `apps-script/Bulletin.gs` runs in the church Google account
+(script.google.com, signed in as mtzhop). It builds a bulletin Google Doc whose
+left column is real text ("Label | Name" lines), and every Saturday ~8 PM reads
+ONLY that left column and POSTs it to `admin-post-bulletin` (admin password in
+the script's properties), then emails mtzhop@gmail.com what it posted. The
+function rejects unknown labels and dollar amounts. Keep the repo copy of the
+script in sync with the one in Google.
+
 **Add a sermon:** normally done on the Admin page. By hand: add an entry to
 `data/sermons.json` (newest-first) with `date`, `title`, `speaker`, `type`
 ("Sunday Message"), `passage` (may be ""), `length` ("00:36:23"), `audio` (direct
