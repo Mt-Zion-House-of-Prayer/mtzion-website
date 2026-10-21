@@ -1,5 +1,83 @@
 [
  {
+  "date": "2026-10-18",
+  "service": [
+   [
+    "Moderator",
+    "Matt"
+   ],
+   [
+    "Prayer & Praise",
+    "Kenlyn Miller"
+   ],
+   [
+    "Message",
+    "Austin Miller"
+   ],
+   [
+    "Offering",
+    "General Fund"
+   ],
+   [
+    "Host Family",
+    ""
+   ],
+   [
+    "Kingdom Family Prayer Focus",
+    "Kenlyn & Mary Sue Miller"
+   ]
+  ],
+  "sunday_school": [
+   [
+    "Women's",
+    "Cherie"
+   ],
+   [
+    "Men's",
+    "Chris"
+   ]
+  ],
+  "next": {
+   "date": "2026-10-25",
+   "service": [
+    [
+     "Moderator",
+     "Larry"
+    ],
+    [
+     "Prayer & Praise",
+     "Worship Team (Jonny)"
+    ],
+    [
+     "Message",
+     "Brendan Miller"
+    ],
+    [
+     "Offering",
+     "Building Fund"
+    ],
+    [
+     "Host Family",
+     "Joe & Elsie Miller"
+    ],
+    [
+     "Kingdom Family Prayer Focus",
+     ""
+    ]
+   ],
+   "sunday_school": [
+    [
+     "Men's",
+     "Brandon Yoder"
+    ],
+    [
+     "Women's",
+     "Lisa"
+    ]
+   ]
+  }
+ },
+ {
   "date": "2026-10-11",
   "service": [
    [
