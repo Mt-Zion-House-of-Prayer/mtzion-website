@@ -19,6 +19,8 @@
  * Settings (Project Settings -> Script properties):
  *   BULLETIN_DOC_ID   set automatically by createBulletinTemplate()
  *   ADMIN_PASSWORD    the website's Admin page password (from the church 1Password)
+ *   ANNOUNCE_CONTACT  who to send announcements to, e.g. "Becky at 740-555-1234"
+ *                     (printed on the bulletin's right side; kept out of this code)
  */
 
 const SITE = 'https://mtzionhouseofprayer.netlify.app';
@@ -88,7 +90,7 @@ function createBulletinTemplate() {
   dates.setBorderWidth(1).setBorderColor('#000000');
   const dh = dates.getCell(0, 0).setBackgroundColor(SOFTGRAY).setPaddingTop(4).setPaddingBottom(4);
   fmt(dh.getChild(0).asParagraph(), { size: 13, color: '#ffffff' });
-  dates.getRow(1).setMinimumHeight(300);
+  dates.getRow(1).setMinimumHeight(255);
   const db = dates.getCell(1, 0).setPaddingTop(10);
   const items = [['Prayer Meeting', 'Wednesday, October 28th'], ['Communion', 'Sunday, November 1st'],
                  ['Thanksgiving Supper', 'November 14th']];
@@ -103,11 +105,14 @@ function createBulletinTemplate() {
   txt(AC, ' ', { font: SANS, size: 10.5 });
   R.removeChild(R.getChild(0));
 
-  txt(R, 'BIRTHDAYS & ANNIVERSARIES', { font: SANS, size: 14, underline: true, before: 26, after: 14 });
+  txt(R, 'BIRTHDAYS & ANNIVERSARIES', { font: SANS, size: 14, underline: true, before: 20, after: 10 });
   txt(R, ' ', { size: 12 });
-  txt(R, ' ', { size: 12, after: 70 });
-  txt(R, 'To have announcements added to the bulletin, send to ______ at ___-___-____ by Friday evening.',
-      { font: SANS, size: 10.5, align: 'LEFT', before: 10 });
+  txt(R, ' ', { size: 12, after: 34 });
+  // Contact comes from Script properties (ANNOUNCE_CONTACT, e.g. "Becky at 740-555-1234")
+  // so a phone number is never stored in this code, which is public on GitHub.
+  const contact = PropertiesService.getScriptProperties().getProperty('ANNOUNCE_CONTACT') || '______ at ___-___-____';
+  txt(R, 'To have announcements added to the bulletin, send to ' + contact + ' by Friday evening.',
+      { font: SANS, size: 10.5, align: 'LEFT', before: 6 });
 
   const first = body.getChild(0);
   if (first.getType() === DocumentApp.ElementType.PARAGRAPH && !first.asParagraph().getText()) first.removeFromParent();
