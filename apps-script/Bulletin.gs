@@ -23,8 +23,6 @@
 
 const SITE = 'https://mtzionhouseofprayer.netlify.app';
 const NOTIFY = 'mtzhop@gmail.com';
-const FONT = 'Alegreya Sans SC';   // small caps, like the current bulletin
-const BODY_FONT = 'Alegreya Sans';
 
 // Labels the website accepts, with the spellings people tend to type.
 const SERVICE_LABELS = {
@@ -40,100 +38,141 @@ const CLASS_LABELS = {
 
 // ---------------------------------------------------------------- template
 
+const INK = '#000000', SOFT = '#555555';
+const H = 'Marcellus SC', TXT = 'Lato';
+
 function createBulletinTemplate() {
-  const doc = DocumentApp.create('Mt Zion Bulletin (new template)');
+  const doc = DocumentApp.create('Mt Zion Bulletin (new design)');
   const body = doc.getBody();
-  body.setPageWidth(792).setPageHeight(612)            // US Letter, landscape
-      .setMarginTop(22).setMarginBottom(14).setMarginLeft(36).setMarginRight(36);
+  body.setPageWidth(792).setPageHeight(612)                 // US Letter, landscape
+      .setMarginTop(24).setMarginBottom(18).setMarginLeft(30).setMarginRight(30);
 
   const outer = body.appendTable([['', '']]);
   outer.setBorderWidth(0);
-  const left = outer.getCell(0, 0).setWidth(350).setPaddingRight(24);
-  const right = outer.getCell(0, 1).setPaddingLeft(24);
+  const L = outer.getCell(0, 0).setWidth(354).setPaddingLeft(6).setPaddingRight(26);
+  const R = outer.getCell(0, 1).setPaddingLeft(26).setPaddingRight(6);
 
-  // ---- LEFT: order of service (the part the website reads) ----
-  const logo = UrlFetchApp.fetch(SITE + '/images/logo.png').getBlob();
-  const lp = left.getChild(0).asParagraph();
-  lp.appendInlineImage(logo).setWidth(200).setHeight(91);
-  lp.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  line(left, '20875 Clutter Rd Utica, OH 43080 | MtZionHouseofPrayer.org', { size: 9, font: BODY_FONT });
+  // ===== LEFT: order of service (the only part the website reads) =====
+  const lp = L.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  lp.appendInlineImage(UrlFetchApp.fetch(SITE + '/images/logo.png').getBlob()).setWidth(180).setHeight(82);
+  para(L, '20875 Clutter Rd, Utica, OH 43080  \u00b7  MtZionHouseofPrayer.org', { font: TXT, size: 8, color: SOFT, after: 4 });
+  L.appendHorizontalRule();
 
-  const box = left.appendTable([['']]);
-  box.setBorderWidth(1).setBorderColor('#000000');
-  const bc = box.getCell(0, 0).setPaddingTop(6).setPaddingBottom(6);
-  heading(bc.getChild(0).asParagraph(), "Today's Service | October 11, 2026", { underline: true });
-  ['Moderator | Brenan', 'Prayer & Praise | Johny', 'Message | Brandon Yoder', 'Offering | Pastor Offering',
-   'Host Family | Brendon & Rose Miller', 'Kingdom Family Prayer Focus | Ben & Katrina Miller']
-    .forEach(t => line(bc, t));
+  para(L, "Today's Service", { font: H, size: 11, color: SOFT, before: 4 });
+  para(L, 'Sunday, October 11, 2026', { font: 'Marcellus', size: 19, after: 6 });
+  rows(L, [['Moderator', 'Brenan'], ['Prayer & Praise', 'Johny'], ['Message', 'Brandon Yoder'],
+           ['Offering', 'Pastor Offering'], ['Host Family', 'Brendon & Rose Miller'],
+           ['Kingdom Family Prayer Focus', 'Ben & Katrina Miller']]);
 
-  heading(left.appendParagraph(''), 'Sunday School', { space: 8 });
-  ["Women's | Rebecca Mullett", "Men's | Lavern Eash"].forEach(t => line(left, t));
-  left.appendHorizontalRule();
-  heading(left.appendParagraph(''), 'Next Sunday | October 18, 2026', { underline: true, space: 2 });
-  ["Men's | Chris", "Women's | Cheri", 'Moderator | Matt', 'Prayer & Praise | ', 'Message | Brendan Miller',
-   'Offering | General Fund', 'Host Family | Potluck', 'Kingdom Family Prayer Focus | ']
-    .forEach(t => line(left, t));
-  line(left, 'Last Sunday Offering | ', { space: 6 });
+  para(L, 'Sunday School  \u00b7  9:30 AM', { font: H, size: 11, color: SOFT, before: 8 });
+  rows(L, [["Women's", 'Rebecca Mullett'], ["Men's", 'Lavern Eash']]);
 
-  // ---- RIGHT: church-only content (never read by the script) ----
-  const dates = right.appendTable([['Dates to Remember'], ['Prayer Meeting\nWednesday @ 7pm']]);
-  dates.setBorderWidth(1).setBorderColor('#000000').setColumnWidth(0, 200);
-  dates.getCell(0, 0).setBackgroundColor('#999999');
-  styleCell(dates.getCell(0, 0), { color: '#ffffff', size: 13 });
-  styleCell(dates.getCell(1, 0), { size: 11 });
-  right.removeChild(right.getChild(0));
-  heading(right.appendParagraph(''), 'Announcements', { space: 14 });
-  line(right, '');
-  heading(right.appendParagraph(''), 'Birthdays & Anniversaries', { underline: true, space: 14 });
-  line(right, '');
-  line(right, 'To have announcements added to the bulletin, send them in by Friday evening.',
-       { size: 9, font: BODY_FONT, space: 24 });
+  const box = L.appendTable([['']]);
+  box.setBorderWidth(1).setBorderColor(INK);
+  const B = box.getCell(0, 0).setPaddingTop(6).setPaddingBottom(4).setPaddingLeft(8).setPaddingRight(8);
+  const bp = B.getChild(0).asParagraph(); bp.setText('Next Sunday');
+  style(bp, { font: H, size: 11, color: SOFT });
+  para(B, 'October 18, 2026', { font: 'Marcellus', size: 14, after: 3 });
+  rows(B, [["Men's", 'Chris'], ["Women's", 'Cheri'], ['Moderator', 'Matt'], ['Prayer & Praise', ''],
+           ['Message', 'Brendan Miller'], ['Offering', 'General Fund'], ['Host Family', 'Potluck'],
+           ['Kingdom Family Prayer Focus', '']], 10);
 
-  if (body.getNumChildren() > 1 && body.getChild(0).getType() === DocumentApp.ElementType.PARAGRAPH
-      && !body.getChild(0).asParagraph().getText()) body.getChild(0).removeFromParent();
+  para(L, "Last Sunday's offering:  ", { font: TXT, size: 8.5, color: SOFT, before: 6, align: 'LEFT' });
 
+  // ===== RIGHT: church-only (never read by the script) =====
+  const dates = R.appendTable([['Dates to Remember'], ['']]);
+  dates.setBorderWidth(1).setBorderColor(INK);
+  const dh = dates.getCell(0, 0).setBackgroundColor(INK).setPaddingTop(5).setPaddingBottom(5);
+  style(dh.getChild(0).asParagraph(), { font: H, size: 14, color: '#ffffff' });
+  dates.getRow(1).setMinimumHeight(215);
+  const db = dates.getCell(1, 0).setPaddingTop(8);
+  const dp = db.getChild(0).asParagraph(); dp.setText('Prayer Meeting');
+  style(dp, { font: TXT, size: 11, bold: true });
+  para(db, 'Wednesday @ 7:00 PM', { font: TXT, size: 10.5, italic: true, after: 8 });
+  para(db, 'Communion', { font: TXT, size: 11, bold: true });
+  para(db, 'Sunday, November 1', { font: TXT, size: 10.5, italic: true, after: 8 });
+  R.removeChild(R.getChild(0));
+
+  section(R, 'Announcements');
+  para(R, ' ', { font: TXT, size: 11, after: 30, align: 'LEFT' });
+  section(R, 'Birthdays & Anniversaries');
+  para(R, ' ', { font: TXT, size: 11, after: 30, align: 'LEFT' });
+  para(R, 'To have announcements added to the bulletin, send them in by Friday evening.',
+       { font: TXT, size: 8.5, color: SOFT, italic: true, before: 6 });
+  para(R, '\u201cMine house shall be called an house of prayer for all people.\u201d  Isaiah 56:7',
+       { font: 'Marcellus', size: 9, color: SOFT, before: 10 });
+
+  const first = body.getChild(0);
+  if (first.getType() === DocumentApp.ElementType.PARAGRAPH && !first.asParagraph().getText()) first.removeFromParent();
   doc.saveAndClose();
   PropertiesService.getScriptProperties().setProperty('BULLETIN_DOC_ID', doc.getId());
   Logger.log('Created: ' + doc.getUrl());
   return doc.getUrl();
 }
 
-function heading(p, t, o = {}) {
-  p.setText(t);   // note: setText returns nothing, so it can't be chained
-  p.setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingBefore(o.space || 0).setSpacingAfter(3).setLineSpacing(1);
-  p.editAsText().setFontFamily(FONT).setFontSize(13).setBold(false).setUnderline(!!o.underline);
+function style(p, o) {
+  const al = DocumentApp.HorizontalAlignment[o.align || 'CENTER'];
+  p.setAlignment(al).setSpacingBefore(o.before || 0).setSpacingAfter(o.after || 0).setLineSpacing(1);
+  if (p.getText()) p.editAsText().setFontFamily(o.font || TXT).setFontSize(o.size || 11)
+    .setForegroundColor(o.color || INK).setBold(!!o.bold).setItalic(!!o.italic).setUnderline(false);
   return p;
 }
-function line(container, t, o = {}) {
-  const p = container.appendParagraph(t).setAlignment(DocumentApp.HorizontalAlignment.CENTER)
-    .setSpacingBefore(o.space || 0).setSpacingAfter(0).setLineSpacing(1);
-  if (t) p.editAsText().setFontFamily(o.font || FONT).setFontSize(o.size || 12).setUnderline(false);
-  return p;
+function para(container, t, o = {}) { return style(container.appendParagraph(t), o); }
+function section(container, t) {
+  para(container, t, { font: H, size: 14, before: 14, after: 2 });
+  container.appendHorizontalRule();
 }
-function styleCell(cell, o) {
-  for (let i = 0; i < cell.getNumChildren(); i++) {
-    const p = cell.getChild(i).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-    if (p.getText()) p.editAsText().setFontFamily(FONT).setFontSize(o.size).setForegroundColor(o.color || '#000000');
+// Two-column rows: role (small caps, right-aligned) | name. Names are typed in the right column.
+function rows(container, pairs, size) {
+  const t = container.appendTable(pairs);
+  t.setBorderWidth(0).setColumnWidth(0, 150);
+  for (let r = 0; r < t.getNumRows(); r++) {
+    const k = t.getCell(r, 0).setPaddingTop(2).setPaddingBottom(2).setPaddingRight(10);
+    const v = t.getCell(r, 1).setPaddingTop(2).setPaddingBottom(2);
+    style(k.getChild(0).asParagraph(), { font: H, size: (size || 11) - 0.5, color: SOFT, align: 'RIGHT' });
+    style(v.getChild(0).asParagraph(), { font: TXT, size: size || 11.5, align: 'LEFT' });
   }
+  return t;
 }
 
 // ---------------------------------------------------------------- reading the left side
 
-function leftColumnLines_() {
+// Walks the LEFT column in order and returns lines like {text} for paragraphs and
+// {label, value} for two-column rows. Works with the new design (row tables) and
+// with plain "Label | Name" lines.
+function leftColumnItems_() {
   const id = PropertiesService.getScriptProperties().getProperty('BULLETIN_DOC_ID');
   if (!id) throw new Error('BULLETIN_DOC_ID is not set. Run createBulletinTemplate() first.');
-  const body = DocumentApp.openById(id).getBody();
-  const tables = body.getTables();
-  if (!tables.length) throw new Error('The bulletin layout changed: the two-column table is missing.');
-  return tables[0].getCell(0, 0).getText().split(/\r?\n/).map(s => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  const tables = DocumentApp.openById(id).getBody().getTables();
+  if (!tables.length) throw new Error('The bulletin layout changed: the two-column page table is missing.');
+  const out = [];
+  (function walk(el) {
+    for (let i = 0; i < el.getNumChildren(); i++) {
+      const c = el.getChild(i), type = c.getType();
+      if (type === DocumentApp.ElementType.PARAGRAPH || type === DocumentApp.ElementType.LIST_ITEM) {
+        const t = c.asText().getText().replace(/\s+/g, ' ').trim();
+        if (t) out.push({ text: t });
+      } else if (type === DocumentApp.ElementType.TABLE) {
+        const tb = c.asTable();
+        for (let r = 0; r < tb.getNumRows(); r++) {
+          const row = tb.getRow(r);
+          if (row.getNumCells() >= 2) out.push({ label: row.getCell(0).getText().replace(/\s+/g, ' ').trim(),
+                                                 value: row.getCell(1).getText().replace(/\s+/g, ' ').trim() });
+          else walk(row.getCell(0));
+        }
+      }
+    }
+  })(tables[0].getCell(0, 0));
+  return out;
 }
 
 function parseDate_(s, fallbackFrom) {
-  const clean = String(s || '').replace(/\s+,/g, ',').replace(/(\d+)(st|nd|rd|th)\b/i, '$1').trim();
-  let d = clean ? new Date(clean) : null;
-  if ((!d || isNaN(d)) && fallbackFrom) { d = new Date(fallbackFrom); d.setDate(d.getDate() + 7); }
-  if (!d || isNaN(d)) return '';
-  if (clean && !/\d{4}/.test(clean) && fallbackFrom) d.setFullYear(new Date(fallbackFrom).getFullYear());
+  const clean = String(s || '').replace(/^\s*(sun|sunday)\.?,?\s*/i, '').replace(/\s+,/g, ',')
+    .replace(/(\d+)(st|nd|rd|th)\b/i, '$1').trim();
+  if (!/\d/.test(clean)) return '';
+  let d = new Date(clean);
+  if (isNaN(d)) return '';
+  if (!/\d{4}/.test(clean) && fallbackFrom) d.setFullYear(new Date(fallbackFrom + 'T12:00:00').getFullYear());
   return Utilities.formatDate(d, 'America/New_York', 'yyyy-MM-dd');
 }
 
@@ -141,24 +180,36 @@ function parseBulletin_() {
   const out = { date: '', service: [], sunday_school: [], next: { date: '', service: [], sunday_school: [] } };
   const warnings = [];
   let section = null;   // 'today' | 'ss' | 'next' | 'stop'
-  for (const raw of leftColumnLines_()) {
-    const [left, ...rest] = raw.split('|');
-    const key = left.trim().toLowerCase().replace(/[\u2019`]/g, "'");
-    const val = rest.join('|').trim();
-    if (key.startsWith("today's service") || key.startsWith('todays service')) { section = 'today'; out.date = parseDate_(val); continue; }
-    if (key === 'sunday school') { section = 'ss'; continue; }
-    if (key.startsWith('next sunday')) { section = 'next'; out.next.date = parseDate_(val || left.replace(/next sunday,?/i, ''), out.date); continue; }
-    if (key.startsWith('last sunday offering')) { section = 'stop'; continue; }   // amount never leaves the doc
-    if (!section || section === 'stop' || key.includes('clutter rd')) continue;
-
+  const add = (label, val, raw) => {
+    const key = label.trim().toLowerCase().replace(/[\u2019`]/g, "'");
     const target = section === 'next' ? out.next : out;
     if (CLASS_LABELS[key] !== undefined) target.sunday_school.push([CLASS_LABELS[key], val]);
     else if (SERVICE_LABELS[key] !== undefined) target.service.push([SERVICE_LABELS[key], val]);
-    else if (section === 'ss' && rest.length === 0) out.sunday_school.push(['', raw]);       // e.g. "Prayer & Sharing"
+    else if (section === 'ss' && !label) out.sunday_school.push(['', val]);
     else warnings.push('Skipped a line I did not recognize: "' + raw + '"');
+  };
+  for (const it of leftColumnItems_()) {
+    if (section === 'stop') break;
+    if (it.text !== undefined) {
+      const [left, ...rest] = it.text.split('|');
+      const key = left.trim().toLowerCase().replace(/[\u2019`]/g, "'");
+      const val = rest.join('|').trim();
+      if (key.startsWith("today's service") || key.startsWith('todays service')) { section = 'today'; if (val) out.date = parseDate_(val); continue; }
+      if (key.startsWith('sunday school')) { section = 'ss'; continue; }
+      if (key.startsWith('next sunday')) { section = 'next'; out.next.date = parseDate_(val || left.replace(/next sunday,?/i, ''), out.date); continue; }
+      if (key.startsWith('last sunday') || key.includes('offering:')) { section = 'stop'; continue; }   // amount never leaves the doc
+      if (!section || key.includes('clutter rd')) continue;
+      if (section === 'today' && !out.date && parseDate_(it.text)) { out.date = parseDate_(it.text); continue; }
+      if (section === 'next' && !out.next.date && parseDate_(it.text, out.date)) { out.next.date = parseDate_(it.text, out.date); continue; }
+      if (rest.length) add(left, val, it.text);
+      else if (section === 'ss') out.sunday_school.push(['', it.text]);
+      else warnings.push('Skipped a line I did not recognize: "' + it.text + '"');
+    } else if (section && section !== 'stop') {
+      add(it.label, it.value, it.label + ' | ' + it.value);
+    }
   }
-  if (!out.date) throw new Error('Could not find the date on the "Today\'s Service | ..." line.');
-  if (!out.service.some(p => p[1])) throw new Error("The Today's Service box looks empty.");
+  if (!out.date) throw new Error("Could not find the date under \"Today's Service\".");
+  if (!out.service.some(p => p[1])) throw new Error("The Today's Service rows look empty.");
   return { bulletin: out, warnings };
 }
 
