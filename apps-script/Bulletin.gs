@@ -11,7 +11,10 @@
  *                             automatically every Saturday evening (installTrigger).
  *                             Emails mtzhop@gmail.com what it posted, or what went wrong.
  *   previewBulletin()         shows what WOULD be posted, without posting (View -> Logs).
- *   installTrigger()          one time: schedules postBulletin for Saturdays ~8 PM.
+ *   fillBulletinFromSheet()   Fridays ~6 AM: fills the LEFT side for the coming Sunday from the
+ *                             "Master Information Lists" spreadsheet (year tab only) and emails
+ *                             mtzhop@gmail.com to review it. The right side is never touched.
+ *   installTrigger()          one time: schedules the Friday fill and the Saturday post.
  *
  * The right side of the bulletin (Dates to Remember, announcements, birthdays) and the
  * offering amount are NEVER read or sent - only the left column is parsed.
@@ -57,29 +60,7 @@ function createBulletinTemplate() {
   const R = outer.getCell(0, 1).setPaddingLeft(22);
 
   // ===== LEFT (the only part the website reads) =====
-  const lp = L.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  lp.appendInlineImage(UrlFetchApp.fetch(SITE + '/images/logo.png').getBlob()).setWidth(230).setHeight(105);
-  txt(L, '20875 Clutter Rd Utica, OH 43080 | MtZionHouseofPrayer.org', { font: SANS, size: 10, bold: true, after: 2 });
-
-  // Today's Service box: everything inside it is THIS Sunday
-  const box = L.appendTable([['']]);
-  box.setBorderWidth(1).setBorderColor('#000000');
-  const B = box.getCell(0, 0).setPaddingTop(6).setPaddingBottom(6);
-  const bp = B.getChild(0).asParagraph(); bp.setText("TODAY'S SERVICE | October 18, 2026");
-  fmt(bp, { font: SANS, size: 13, underline: true, after: 8 });
-  ['Moderator | Matt', 'Prayer & Praise | Kenlyn Miller', 'Message | Austin Miller', 'Offering | General Fund',
-   'Host Family | ', 'Kingdom Family Prayer Focus | Kenlyn & Mary Sue Miller'].forEach(t => txt(B, t, { size: 12.5 }));
-
-  txt(L, 'Sunday School', { size: 13, before: 10 });
-  txt(L, "Women's - Cherie \\ Men's - Chris", { size: 11 });
-  L.appendHorizontalRule();
-  txt(L, 'Next Sunday, October 25th', { size: 13, before: 2 });
-  txt(L, "Men's - Brandon Yoder", { size: 12 });
-  txt(L, "Women's - Lisa", { size: 11 });
-  txt(L, 'NEXT SUNDAY', { font: SANS, size: 13, underline: true, before: 10, after: 6 });
-  ['Moderator | Larry', 'Prayer & Praise | Worship Team (Jonny)', 'Message | Brendan Miller', 'Offering | Building Fund',
-   'Host Family | Joe & Elsie Miller', 'Kingdom Family Prayer Focus | '].forEach(t => txt(L, t, { size: 11.5 }));
-  txt(L, 'LAST SUNDAY OFFERING - ', { font: SANS, size: 11.5, before: 10 });
+  buildLeft_(L, SAMPLE_);
 
   // ===== RIGHT (church-only; never read by the script) =====
   const top = R.appendTable([['', '']]);              // Dates box | Announcements, side by side
@@ -120,6 +101,122 @@ function createBulletinTemplate() {
   PropertiesService.getScriptProperties().setProperty('BULLETIN_DOC_ID', doc.getId());
   Logger.log('Created: ' + doc.getUrl());
   return doc.getUrl();
+}
+
+// Sample left side used when the template is first created (the Oct 18, 2026 bulletin).
+const SAMPLE_ = {
+  date: '2026-10-18',
+  service: { 'Moderator': 'Matt', 'Prayer & Praise': 'Kenlyn Miller', 'Message': 'Austin Miller',
+             'Offering': 'General Fund', 'Host Family': '', 'Kingdom Family Prayer Focus': 'Kenlyn & Mary Sue Miller' },
+  ss: { "Women's": 'Cherie', "Men's": 'Chris' },
+  next: { date: '2026-10-25',
+          service: { 'Moderator': 'Larry', 'Prayer & Praise': 'Worship Team (Jonny)', 'Message': 'Brendan Miller',
+                     'Offering': 'Building Fund', 'Host Family': 'Joe & Elsie Miller', 'Kingdom Family Prayer Focus': '' },
+          ss: { "Men's": 'Brandon Yoder', "Women's": 'Lisa' } },
+};
+const ORDER_ = ['Moderator', 'Prayer & Praise', 'Message', 'Offering', 'Host Family', 'Kingdom Family Prayer Focus'];
+
+function longDate_(iso, ordinal) {
+  const d = new Date(iso + 'T12:00:00');
+  const day = d.getDate();
+  const suf = !ordinal ? '' : (day % 100 >= 11 && day % 100 <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[day % 10] || 'th');
+  return Utilities.formatDate(d, 'America/New_York', 'MMMM') + ' ' + day + suf + (ordinal ? '' : ', ' + d.getFullYear());
+}
+
+// Builds the whole left column from data d (see SAMPLE_). L must be empty except one paragraph.
+function buildLeft_(L, d) {
+  const lp = L.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  lp.appendInlineImage(UrlFetchApp.fetch(SITE + '/images/logo.png').getBlob()).setWidth(230).setHeight(105);
+  txt(L, '20875 Clutter Rd Utica, OH 43080 | MtZionHouseofPrayer.org', { font: SANS, size: 10, bold: true, after: 2 });
+
+  // Today's Service box: everything inside it is THIS Sunday
+  const box = L.appendTable([['']]);
+  box.setBorderWidth(1).setBorderColor('#000000');
+  const B = box.getCell(0, 0).setPaddingTop(6).setPaddingBottom(6);
+  const bp = B.getChild(0).asParagraph(); bp.setText("TODAY'S SERVICE | " + longDate_(d.date));
+  fmt(bp, { font: SANS, size: 13, underline: true, after: 8 });
+  ORDER_.forEach(k => txt(B, k + ' | ' + (d.service[k] || ''), { size: 12.5 }));
+
+  txt(L, 'Sunday School', { size: 13, before: 10 });
+  txt(L, "Women's - " + (d.ss["Women's"] || '') + " \\ Men's - " + (d.ss["Men's"] || ''), { size: 11 });
+  L.appendHorizontalRule();
+  txt(L, 'Next Sunday, ' + longDate_(d.next.date, true), { size: 13, before: 2 });
+  txt(L, "Men's - " + (d.next.ss["Men's"] || ''), { size: 12 });
+  txt(L, "Women's - " + (d.next.ss["Women's"] || ''), { size: 11 });
+  txt(L, 'NEXT SUNDAY', { font: SANS, size: 13, underline: true, before: 10, after: 6 });
+  ORDER_.forEach(k => txt(L, k + ' | ' + (d.next.service[k] || ''), { size: 11.5 }));
+  txt(L, 'LAST SUNDAY OFFERING - ', { font: SANS, size: 11.5, before: 10 });
+}
+
+// ---------------------------------------------------------------- Friday: fill from the schedule sheet
+// Reads ONLY the year tab (e.g. "2026") of the Master Information Lists spreadsheet -
+// never the member, baptism, or other tabs.
+
+const SHEET_ID_DEFAULT = '1ldaIZcdiW0gOlv33Tzvx0VTb-rgQmhUkp8-y_6wCwII';
+const SHEET_COLS_ = { 'Kingdom Family Prayer Focus': 'Kingdom Family Prayer Focus', 'Moderator': 'Moderator',
+  'Message': 'Message', 'Prayer & Praise': 'Prayer & Praise', 'Offering': 'Offering', 'Host Family': 'Host Family' };
+
+function nextSunday_(from) {
+  const d = new Date(from || new Date()); d.setHours(12, 0, 0, 0);
+  d.setDate(d.getDate() + ((7 - d.getDay()) % 7 || 7));
+  return Utilities.formatDate(d, 'America/New_York', 'yyyy-MM-dd');
+}
+
+// Returns {service, ss} for one Sunday from the year tab, or null if there's no row for it.
+function scheduleFor_(iso) {
+  const id = PropertiesService.getScriptProperties().getProperty('SCHEDULE_SHEET_ID') || SHEET_ID_DEFAULT;
+  const year = iso.slice(0, 4);
+  const sh = SpreadsheetApp.openById(id).getSheetByName(year);
+  if (!sh) throw new Error('The schedule spreadsheet has no "' + year + '" tab.');
+  const range = sh.getDataRange();
+  const shown = range.getDisplayValues(), raw = range.getValues(), rich = range.getRichTextValues();
+  const head = shown[0].map(h => h.trim().toLowerCase());
+  const col = name => head.indexOf(name.toLowerCase());
+  const want = new Date(iso + 'T12:00:00');
+  for (let r = 1; r < shown.length; r++) {
+    let d = raw[r][0] instanceof Date ? new Date(raw[r][0]) : new Date(shown[r][0] + ' ' + year);
+    if (isNaN(d) || d.getMonth() !== want.getMonth() || d.getDate() !== want.getDate()) continue;
+    const cell = name => {
+      const c = col(name); if (c < 0) return '';
+      const rt = rich[r][c];
+      if (rt && rt.getText() && rt.getTextStyle().isStrikethrough()) return '';   // crossed out = not happening
+      return shown[r][c].replace(/\s+/g, ' ').trim();
+    };
+    const service = {};
+    Object.keys(SHEET_COLS_).forEach(k => { service[k] = cell(SHEET_COLS_[k]); });
+    return { service, ss: { "Women's": cell('Ladies SS'), "Men's": cell('Mens SS') } };
+  }
+  return null;
+}
+
+// Fills the bulletin's LEFT side for the coming Sunday from the schedule sheet, then
+// emails mtzhop@gmail.com to review it. The right side is never touched.
+function fillBulletinFromSheet() {
+  try {
+    const date = nextSunday_(), next = nextSunday_(new Date(date + 'T12:00:00'));
+    const today = scheduleFor_(date);
+    let after = null;
+    try { after = scheduleFor_(next); } catch (e) { /* e.g. next year's tab doesn't exist yet */ }
+    if (!today) throw new Error('No row for ' + longDate_(date) + ' in the schedule spreadsheet.');
+    const id = PropertiesService.getScriptProperties().getProperty('BULLETIN_DOC_ID');
+    const doc = DocumentApp.openById(id);
+    const L = doc.getBody().getTables()[0].getCell(0, 0);
+    L.clear();
+    buildLeft_(L, { date, service: today.service, ss: today.ss,
+                    next: { date: next, service: (after || {}).service || {}, ss: (after || {}).ss || {} } });
+    doc.saveAndClose();
+    const blanks = ORDER_.filter(k => !today.service[k]);
+    MailApp.sendEmail(NOTIFY, 'Bulletin draft ready to review - ' + longDate_(date),
+      'The left side of the bulletin has been filled in from the schedule spreadsheet:\n' + doc.getUrl() +
+      '\n\nPlease review it, fill in Sunday School and anything missing' +
+      (blanks.length ? ' (blank this week: ' + blanks.join(', ') + ')' : '') +
+      ', and add the right side (dates, announcements, birthdays) as usual.' +
+      '\n\nOn Saturday evening the order of service is posted to the website automatically.');
+  } catch (e) {
+    MailApp.sendEmail(NOTIFY, 'Bulletin draft could NOT be filled from the spreadsheet',
+      'The Friday auto-fill did not run:\n\n  ' + e.message + '\n\nThe bulletin was not changed; fill it in by hand as usual.');
+    throw e;
+  }
 }
 
 function fmt(p, o) {
@@ -258,7 +355,9 @@ function postBulletin() {
 }
 
 function installTrigger() {
-  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'postBulletin').forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.getProjectTriggers().filter(t => ['postBulletin', 'fillBulletinFromSheet'].includes(t.getHandlerFunction()))
+    .forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('fillBulletinFromSheet').timeBased().onWeekDay(ScriptApp.WeekDay.FRIDAY).atHour(6).inTimezone('America/New_York').create();
   ScriptApp.newTrigger('postBulletin').timeBased().onWeekDay(ScriptApp.WeekDay.SATURDAY).atHour(20).inTimezone('America/New_York').create();
-  Logger.log('postBulletin will run every Saturday around 8 PM Eastern.');
+  Logger.log('fillBulletinFromSheet: Fridays ~6 AM.  postBulletin: Saturdays ~8 PM (Eastern).');
 }

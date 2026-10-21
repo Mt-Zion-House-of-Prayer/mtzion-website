@@ -104,7 +104,11 @@ older than 3 months are pruned weekly by `.github/workflows/prune-bulletins.yml`
 (script.google.com, signed in as mtzhop). It builds a bulletin Google Doc whose
 left column is real text ("Label | Name" lines), and every Saturday ~8 PM reads
 ONLY that left column and POSTs it to `admin-post-bulletin` (admin password in
-the script's properties), then emails mtzhop@gmail.com what it posted. The
+the script's properties), then emails mtzhop@gmail.com what it posted. Every Friday ~6 AM,
+`fillBulletinFromSheet` fills the bulletin's LEFT side for the coming Sunday from the
+"Master Information Lists" spreadsheet (the year tab only, e.g. "2026" — never the
+member/baptism/etc. tabs; crossed-out names count as blank) and emails a "review it"
+note. A person reviews/edits Saturday; the right side is always manual. The
 function rejects unknown labels and dollar amounts. Keep the repo copy of the
 script in sync with the one in Google.
 
