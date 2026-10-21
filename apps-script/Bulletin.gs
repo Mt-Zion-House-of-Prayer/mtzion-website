@@ -83,10 +83,10 @@ function createBulletinTemplate() {
   // Three boxes with space reserved, so lines can be added to one without moving the
   // others (until a box is completely full). The left side is a separate column and
   // never moves.
-  box(R, 'Dates to Remember', 170, [['Prayer Meeting', 'Wednesday @ 7:00 PM'], ['Communion', 'Sunday, November 1']]);
+  reservedBox(R, 'Dates to Remember', 170, [['Prayer Meeting', 'Wednesday @ 7:00 PM'], ['Communion', 'Sunday, November 1']]);
   R.removeChild(R.getChild(0));   // drop the cell's empty starter line (now that the box is in)
-  box(R, 'Announcements', 120, [], 10);
-  box(R, 'Birthdays & Anniversaries', 92, [], 10);
+  reservedBox(R, 'Announcements', 120, [], 10);
+  reservedBox(R, 'Birthdays & Anniversaries', 92, [], 10);
   para(R, 'To have announcements added to the bulletin, send them in by Friday evening.',
        { font: TXT, size: 8.5, color: SOFT, italic: true, before: 8 });
   para(R, '\u201cMine house shall be called an house of prayer for all people.\u201d  Isaiah 56:7',
@@ -109,7 +109,7 @@ function style(p, o) {
 }
 function para(container, t, o = {}) { return style(container.appendParagraph(t), o); }
 // A box with a black header bar and a body row that reserves `height` points of space.
-function box(container, title, height, items, gapBefore) {
+function reservedBox(container, title, height, items, gapBefore) {
   if (gapBefore) para(container, ' ', { size: 4 });
   const t = container.appendTable([[title], ['']]);
   t.setBorderWidth(1).setBorderColor(INK);
