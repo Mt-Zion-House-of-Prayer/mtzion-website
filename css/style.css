@@ -111,6 +111,26 @@ section { padding: 64px 0; }
 .hero-links .label { color: #fff; }
 .hero-links a { background: rgba(255,255,255,.95); }
 
+/* Long documents: Statement of Faith, Constitution */
+.doc { max-width: 780px; }
+.doc .lead { font-size: 1.1rem; color: var(--heading); }
+.doc h2 { margin-top: 1.6em; }
+.doc h3 { font-size: 1.15rem; margin: 1.4em 0 .4em; }
+.doc ol, .doc ul { padding-left: 1.4em; }
+.doc li { margin-bottom: .5em; }
+.faith { list-style: none; counter-reset: faith; padding-left: 0 !important; }
+.faith > li { counter-increment: faith; position: relative; padding: 14px 0 14px 52px; border-bottom: 1px solid var(--line); margin: 0; }
+.faith > li::before { content: counter(faith); position: absolute; left: 0; top: 12px; width: 34px; height: 34px; border-radius: 50%; background: var(--gray-light); color: var(--red); font-family: var(--display); font-size: 1.15rem; display: grid; place-items: center; }
+.faith p { margin: 0; }
+.faith .refs { margin-top: 4px; font-size: .9rem; color: #888; font-style: italic; }
+.toc { background: var(--gray-light); border-radius: 12px; padding: 22px 26px; margin-bottom: 12px; }
+.toc h2 { margin: 0 0 .4em; font-size: 1.3rem; }
+.toc ol { margin: 0 0 .6em; columns: 2; column-gap: 28px; }
+.toc a { text-decoration: none; }
+.article { padding: 0; scroll-margin-top: 100px; }
+.doc-next { margin-top: 36px; padding: 24px 26px; background: var(--gray-light); border-radius: 12px; }
+@media (max-width: 600px) { .toc ol { columns: 1; } }
+
 /* Footer */
 .site-footer { background: var(--gray); padding: 56px 0 24px; font-size: .95rem; }
 .site-footer .cols { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 36px; }

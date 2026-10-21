@@ -34,12 +34,14 @@ only real Mt Zion photos so far. More photos of people and services would help m
 | `visit.html` | Plan a visit / who we are |
 | `sermons.html` | Searchable sermon list (filled from `data/sermons.json`) |
 | `bulletins.html` | Bulletins by year (filled from `data/bulletins.json`) |
+| `beliefs.html` | Statement of Faith (13 points), verbatim from the church's 2023 constitution PDF |
+| `constitution.html` | Constitution (Preamble, Articles I–VIII) + member Guidelines, verbatim, revised 2023 |
 | `css/style.css` | All styling. Colors are variables at the top |
 | `js/site.js` | Renders the lists. Rarely needs editing |
 | `bulletins/` | Bulletin PDFs, named `YYYY-MM-DD.pdf` (the Sunday date). Last 3 months only |
 | `scripts/prune_bulletins.py` | Weekly cleanup of bulletins older than 3 months |
 
-The header and footer are copied into all four HTML pages. A change to the nav,
+The header and footer are copied into all six public HTML pages. A change to the nav,
 address, or service times must be made in **every** page (and the hero/visit text
 where times appear). Grep for the old text to find every copy.
 
@@ -95,6 +97,8 @@ groups them (it's "Chris Geiser", not "Cris").
 
 **Change service times / address:** update all four HTML pages (hero, footer,
 visit cards, map links). Times appear as "9:30 AM" and "10:30 AM".
+
+The Statement of Faith and Constitution are the church's official wording — never paraphrase or "improve" them. Source: "Mt Zion Constitution 2023.pdf" in the church Google Drive (Important Documents). If the church revises it, update both pages from the new PDF.
 
 ## Rules
 
