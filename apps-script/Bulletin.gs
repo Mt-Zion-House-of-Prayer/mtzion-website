@@ -44,7 +44,7 @@ function createBulletinTemplate() {
   const doc = DocumentApp.create('Mt Zion Bulletin (new template)');
   const body = doc.getBody();
   body.setPageWidth(792).setPageHeight(612)            // US Letter, landscape
-      .setMarginTop(30).setMarginBottom(24).setMarginLeft(36).setMarginRight(36);
+      .setMarginTop(22).setMarginBottom(14).setMarginLeft(36).setMarginRight(36);
 
   const outer = body.appendTable([['', '']]);
   outer.setBorderWidth(0);
@@ -54,26 +54,26 @@ function createBulletinTemplate() {
   // ---- LEFT: order of service (the part the website reads) ----
   const logo = UrlFetchApp.fetch(SITE + '/images/logo.png').getBlob();
   const lp = left.getChild(0).asParagraph();
-  lp.appendInlineImage(logo).setWidth(250).setHeight(114);
+  lp.appendInlineImage(logo).setWidth(200).setHeight(91);
   lp.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
   line(left, '20875 Clutter Rd Utica, OH 43080 | MtZionHouseofPrayer.org', { size: 9, font: BODY_FONT });
 
   const box = left.appendTable([['']]);
   box.setBorderWidth(1).setBorderColor('#000000');
-  const bc = box.getCell(0, 0).setPaddingTop(10).setPaddingBottom(10);
+  const bc = box.getCell(0, 0).setPaddingTop(6).setPaddingBottom(6);
   heading(bc.getChild(0).asParagraph(), "Today's Service | October 11, 2026", { underline: true });
   ['Moderator | Brenan', 'Prayer & Praise | Johny', 'Message | Brandon Yoder', 'Offering | Pastor Offering',
    'Host Family | Brendon & Rose Miller', 'Kingdom Family Prayer Focus | Ben & Katrina Miller']
     .forEach(t => line(bc, t));
 
-  heading(left.appendParagraph(''), 'Sunday School', { space: 12 });
+  heading(left.appendParagraph(''), 'Sunday School', { space: 8 });
   ["Women's | Rebecca Mullett", "Men's | Lavern Eash"].forEach(t => line(left, t));
   left.appendHorizontalRule();
-  heading(left.appendParagraph(''), 'Next Sunday | October 18, 2026', { underline: true, space: 6 });
+  heading(left.appendParagraph(''), 'Next Sunday | October 18, 2026', { underline: true, space: 2 });
   ["Men's | Chris", "Women's | Cheri", 'Moderator | Matt', 'Prayer & Praise | ', 'Message | Brendan Miller',
    'Offering | General Fund', 'Host Family | Potluck', 'Kingdom Family Prayer Focus | ']
     .forEach(t => line(left, t));
-  line(left, 'Last Sunday Offering | ', { space: 12 });
+  line(left, 'Last Sunday Offering | ', { space: 6 });
 
   // ---- RIGHT: church-only content (never read by the script) ----
   const dates = right.appendTable([['Dates to Remember'], ['Prayer Meeting\nWednesday @ 7pm']]);
@@ -100,14 +100,14 @@ function createBulletinTemplate() {
 
 function heading(p, t, o = {}) {
   p.setText(t);   // note: setText returns nothing, so it can't be chained
-  p.setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingBefore(o.space || 0).setSpacingAfter(6);
-  p.editAsText().setFontFamily(FONT).setFontSize(15).setBold(false).setUnderline(!!o.underline);
+  p.setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingBefore(o.space || 0).setSpacingAfter(3).setLineSpacing(1);
+  p.editAsText().setFontFamily(FONT).setFontSize(13).setBold(false).setUnderline(!!o.underline);
   return p;
 }
 function line(container, t, o = {}) {
   const p = container.appendParagraph(t).setAlignment(DocumentApp.HorizontalAlignment.CENTER)
-    .setSpacingBefore(o.space || 0).setSpacingAfter(1);
-  if (t) p.editAsText().setFontFamily(o.font || FONT).setFontSize(o.size || 14).setUnderline(false);
+    .setSpacingBefore(o.space || 0).setSpacingAfter(0).setLineSpacing(1);
+  if (t) p.editAsText().setFontFamily(o.font || FONT).setFontSize(o.size || 12).setUnderline(false);
   return p;
 }
 function styleCell(cell, o) {
