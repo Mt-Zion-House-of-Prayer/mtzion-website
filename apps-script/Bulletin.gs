@@ -215,10 +215,12 @@ function fillBulletinFromSheet() {
       const key = norm_(bar >= 0 ? t.slice(0, bar) : t);
       if (it.inBox) {
         if (key.startsWith("today's service") || key.startsWith('todays service')) setAfter_(p, bar, longDate_(date));
+        else if (key === 'sunday school' && bar >= 0) fillClasses_(p, today.ss);
         else if (bar >= 0 && SERVICE_LABELS[key]) setAfter_(p, bar, today.service[SERVICE_LABELS[key]] || '');
         continue;
       }
       if (key.startsWith('last sunday')) break;
+      if (key === 'sunday school' && bar >= 0) { fillClasses_(p, section === 'next' ? after.ss : today.ss); continue; }
       if (key === 'sunday school') { section = 'ss'; continue; }
       if (key.startsWith('next sunday')) {
         const comma = t.indexOf(',');
@@ -260,7 +262,7 @@ function fillClasses_(p, ss) {
   const text = p.editAsText();
   const labels = Object.keys(CLASS_LABELS);
   let s = text.getText();
-  const re = /([A-Za-z\u2019']+)\s*-\s*([^\\\/]*)/g;
+  const re = /([A-Za-z\u2019']+)\s*-\s*([^\\\/|]*)/g;
   const edits = [];
   let m;
   while ((m = re.exec(s))) {
@@ -348,7 +350,7 @@ const norm_ = s => s.trim().toLowerCase().replace(/[\u2019`]/g, "'");
 // "Womens - Cherie \ Mens - Chris"  ->  [["Women's","Cherie"],["Men's","Chris"]]
 function classPairs_(line) {
   const out = [];
-  for (const part of line.split(/\s[\\\/]\s|\\|\//)) {
+  for (const part of line.split(/\s[\\\/|]\s|[\\\/|]/)) {
     const m = part.match(/^\s*([^-|:]+?)\s*[-|:]\s*(.*)$/);
     if (m && CLASS_LABELS[norm_(m[1])] !== undefined) out.push([CLASS_LABELS[norm_(m[1])], m[2].trim()]);
     else if (part.trim()) out.push(['', part.replace(/\s*-\s*$/, '').trim()]);
@@ -368,11 +370,16 @@ function parseBulletin_() {
     if (it.inBox) {                                   // ---- THIS Sunday ----
       if (key.startsWith("today's service") || key.startsWith('todays service')) { out.date = parseDate_(val); continue; }
       if (key.startsWith('next sunday') && !val) continue;                       // stray heading inside the box
+      if (key === 'sunday school' && rest.length) { out.sunday_school.push(...classPairs_(val)); continue; }
       if (rest.length && SERVICE_LABELS[key] !== undefined) out.service.push([SERVICE_LABELS[key], val]);
       else warnings.push('Skipped (in Today\'s box): "' + it.text + '"');
       continue;
     }
     if (key.startsWith('last sunday offering') || key.startsWith("last sunday's offering")) { section = 'stop'; continue; }
+    if (key === 'sunday school' && rest.length) {          // one-line form: "Sunday School | Women's - X | Men's - Y"
+      (section === 'next' ? out.next.sunday_school : out.sunday_school).push(...classPairs_(val));
+      continue;
+    }
     if (key === 'sunday school') { section = 'ss'; continue; }
     if (key.startsWith('next sunday')) {
       const d = parseDate_(val || left.replace(/next sunday,?/i, ''), out.date);
