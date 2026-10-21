@@ -15,6 +15,19 @@ small, and always show the result in the preview before committing.
 - The real domain `mtzionhouseofprayer.org` still points at the old WordPress site.
   Don't move it until sermon audio is off WordPress (see Migration status).
 
+## Domain & email
+
+- `mtzionhouseofprayer.org` is registered at **Cloudflare** in the church's name
+  (moved from IONOS Oct 2026; auto-renews each Sept; owner contact mtzhop@gmail.com).
+  Cloudflare login = "Sign in with GitHub" as the church `mtzhop` GitHub account.
+- DNS is in the same Cloudflare account. Website A/AAAA records still point at the
+  old IONOS host until the site cutover.
+- **Email:** Cloudflare Email Routing (forward-only, free). `admin@` and a catch-all
+  (every other address, incl. `donations@`) forward to `mtzhop@gmail.com`. No one
+  can *send* as @mtzionhouseofprayer.org — that would need a mailbox service.
+  The leftover IONOS DKIM/DMARC/autodiscover CNAMEs are harmless; remove when tidying.
+- Cash App uses a separate Gmail (info.mzhop@gmail.com), not the domain.
+
 ## Design
 
 The page *format* is modeled on our mother church's site, Gospel Haven
