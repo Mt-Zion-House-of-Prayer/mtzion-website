@@ -10,7 +10,7 @@ export default adminHandler(async body => {
       const list = await readJsonFile("data/bulletins.json");
       const hit = list.find(b => b.date === date);
       if (!hit) throw new HttpError(404, "That bulletin is already gone.");
-      return [{ path: hit.file, delete: true },
+      return [...(hit.file ? [{ path: hit.file, delete: true }] : []),
               { path: "data/bulletins.json", content: toJson(list.filter(b => b !== hit)) }];
     });
     return { ok: true };

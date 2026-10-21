@@ -27,7 +27,8 @@ bulletins = json.loads(DATA.read_text())
 keep = [b for b in bulletins if dt.date.fromisoformat(b["date"]) >= cutoff]
 for b in bulletins:
     if b not in keep:
-        (ROOT / b["file"]).unlink(missing_ok=True)
-        print("removed", b["file"])
+        if b.get("file"):  # older entries were PDFs; current ones are data only
+            (ROOT / b["file"]).unlink(missing_ok=True)
+        print("removed bulletin", b["date"])
 DATA.write_text(json.dumps(keep, indent=1) + "\n")
 print(f"kept {len(keep)} bulletins on/after {cutoff}")

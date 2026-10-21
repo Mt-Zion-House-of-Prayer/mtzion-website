@@ -51,7 +51,6 @@ only real Mt Zion photos so far. More photos of people and services would help m
 | `constitution.html` | Constitution (Preamble, Articles I–VIII), verbatim, revised 2023 |
 | `css/style.css` | All styling. Colors are variables at the top |
 | `js/site.js` | Renders the lists. Rarely needs editing |
-| `bulletins/` | Bulletin PDFs, named `YYYY-MM-DD.pdf` (the Sunday date). Last 3 months only |
 | `scripts/prune_bulletins.py` | Weekly cleanup of bulletins older than 3 months |
 
 The header and footer are copied into all six public HTML pages. A change to the nav,
@@ -66,8 +65,7 @@ is recorded in each commit message.
 
 - `admin/index.html` — the page. Sermon flow: `admin-upload-url` returns a presigned
   link → the browser PUTs the MP3 straight to Cloudflare R2 → `admin-add-sermon`
-  adds the entry to `data/sermons.json`. Bulletins go through `admin-add-bulletin`
-  (PDF ≤ 4 MB, committed into `bulletins/`). `admin-remove` takes either back off.
+  adds the entry to `data/sermons.json`. Bulletin PDF upload is retired (`admin-add-bulletin` returns 410). `admin-remove` takes either back off.
 - `netlify/functions/*.mjs` + `netlify/lib/shared.mjs` — no npm dependencies.
   Each function commits to GitHub through the API, which triggers a redeploy.
 - Settings live in Netlify environment variables (listed at the top of
@@ -91,16 +89,16 @@ page's Latest sermon box, and the footer — but only once `apple_url` /
 
 ## Common tasks
 
-**Add this week's bulletin:** save the PDF as `bulletins/YYYY-MM-DD.pdf` (Sunday's
-date), then add `{"date": "YYYY-MM-DD", "file": "bulletins/YYYY-MM-DD.pdf"}` at the
-TOP of `data/bulletins.json`. The list must stay newest-first — the home page
-shows the first entry as "this week's".
-
-**Bulletins only stay up for 3 months** (church decision, Oct 2026 — they contain
-birthdays, phone numbers, attendance and offering totals). The bulletins page hides
-anything older, and `.github/workflows/prune-bulletins.yml` runs
-`scripts/prune_bulletins.py` every Monday to delete older PDFs and their JSON
-entries, then commits — which redeploys the site. Don't re-add old bulletins.
+**Bulletins = order of service only** (church decision, Oct 2026). The website
+NEVER shows the right side of the bulletin (announcements, Dates to Remember,
+birthdays/anniversaries — a security risk), the "Last Sunday Offering" amount, or
+the PDF itself. Each Sunday is one entry at the TOP of `data/bulletins.json`:
+`{"date", "service": [[label, value], ...], "sunday_school": [[label, value], ...],
+"next": {"date", "service": [...], "sunday_school": [...]}}` — labels as printed
+(Moderator, Prayer & Praise, Message, Offering, Host Family, Kingdom Family Prayer
+Focus); empty values are hidden. The source bulletin is a Google Doc rendered to a
+PDF whose text is all images, so it must be *read*, not text-extracted. Entries
+older than 3 months are pruned weekly by `.github/workflows/prune-bulletins.yml`.
 
 **Add a sermon:** normally done on the Admin page. By hand: add an entry to
 `data/sermons.json` (newest-first) with `date`, `title`, `speaker`, `type`

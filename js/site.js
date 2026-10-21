@@ -47,9 +47,10 @@ async function initHome() {
   }
   if (b) {
     const [latest] = await load("bulletins");
+    const msg = latest && (latest.service || []).find(([k]) => k === "Message");
     b.innerHTML = latest
-      ? `<p>Bulletin for <strong>${fmtDate(latest.date)}</strong></p>
-      <a class="btn" href="${esc(latest.file)}" target="_blank" rel="noopener">Open bulletin</a>`
+      ? `<p>Sunday, <strong>${fmtDate(latest.date)}</strong>${msg && msg[1] ? `<br>Message: <strong>${esc(msg[1])}</strong>` : ""}</p>
+      <a class="btn" href="bulletins.html">See the order of service</a>`
       : `<p class="meta">No bulletin posted yet this week.</p>`;
   }
 }
@@ -82,21 +83,39 @@ async function initSermons() {
 }
 
 // Bulletins page: grouped by year
+// Bulletins: the service side only (no announcements, birthdays, or offering totals —
+// church decision, Oct 2026). Each entry in data/bulletins.json is label/value pairs.
+function rows(pairs) {
+  return (pairs || []).filter(([, v]) => v).map(([k, v]) =>
+    k ? `<div class="bl-row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`
+      : `<div class="bl-row bl-solo"><dd>${esc(v)}</dd></div>`).join("");
+}
+function bulletinCard(b, { big = false } = {}) {
+  const ss = rows(b.sunday_school), next = b.next || {};
+  const nextRows = rows(next.service), nextSS = rows(next.sunday_school);
+  return `<article class="bulletin${big ? " big" : ""}">
+    <header><p class="eyebrow">Order of service</p><h2>${fmtDate(b.date)}</h2></header>
+    <dl>${rows(b.service)}</dl>
+    ${ss ? `<h3>Sunday School <span>9:30 AM</span></h3><dl>${ss}</dl>` : ""}
+    ${nextRows || nextSS ? `<div class="bl-next"><h3>Next Sunday${next.date ? ` · ${fmtDate(next.date).replace(/, \d{4}$/, "")}` : ""}</h3>
+      ${nextSS ? `<p class="bl-sub">Sunday School</p><dl>${nextSS}</dl>` : ""}
+      ${nextRows ? `<p class="bl-sub">Worship</p><dl>${nextRows}</dl>` : ""}</div>` : ""}
+  </article>`;
+}
 async function initBulletins() {
   const box = document.getElementById("bulletin-list");
   if (!box) return;
-  // Only the last 3 months are shown. A weekly GitHub job (scripts/prune_bulletins.py)
-  // also deletes older PDFs, so this filter just covers the days in between.
   const cutoff = new Date();
   cutoff.setMonth(cutoff.getMonth() - 3);
   const recent = (await load("bulletins")).filter(b => {
     const [y, m, d] = b.date.split("-").map(Number);
     return new Date(y, m - 1, d) >= cutoff;
   });
-  box.innerHTML = recent.length
-    ? `<div class="bulletins">${recent.map(b =>
-        `<a href="${esc(b.file)}" target="_blank" rel="noopener">${fmtDate(b.date)}</a>`).join("")}</div>`
-    : `<p class="empty">No recent bulletins posted.</p>`;
+  if (!recent.length) { box.innerHTML = `<p class="empty">No recent bulletins posted.</p>`; return; }
+  const [current, ...past] = recent;
+  box.innerHTML = bulletinCard(current, { big: true }) + (past.length ? `
+    <h2 class="bl-past-h">Earlier Sundays</h2>
+    ${past.map(b => `<details class="bl-past"><summary>${fmtDate(b.date)}</summary>${bulletinCard(b)}</details>`).join("")}` : "");
 }
 
 // "Listen on Apple Podcasts / Spotify" links. Hidden until the show's addresses are

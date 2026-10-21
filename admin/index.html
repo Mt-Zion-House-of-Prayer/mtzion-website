@@ -84,16 +84,8 @@
 
     <!-- Bulletin -->
     <section class="card">
-      <h2>Add a bulletin</h2>
-      <p class="meta">Bulletins stay on the site for 3 months, then come off automatically.</p>
-      <form id="bulletin-form">
-        <div class="row2">
-          <div class="field"><label for="b-file">Bulletin (PDF)</label><input id="b-file" type="file" accept=".pdf,application/pdf" required></div>
-          <div class="field"><label for="b-date">Sunday it's for</label><input id="b-date" type="date" required></div>
-        </div>
-        <button class="btn" type="submit">Upload bulletin</button>
-        <div class="status" id="bulletin-status"></div>
-      </form>
+      <h2>Bulletins</h2>
+      <p>Bulletins are no longer uploaded here. The website shows only the <strong>order of service</strong> (no announcements, birthdays, or offering totals), and it’s added from the weekly bulletin email.</p>
     </section>
 
     <!-- Recent -->
@@ -158,7 +150,6 @@ async function showPanel() {
   $("signin").hidden = true; $("panel").hidden = false;
   $("who-label").textContent = who;
   $("s-date").value = lastSunday();
-  $("b-date").value = nextSunday();
   await loadRecent();
 }
 
@@ -178,7 +169,7 @@ async function loadRecent() {
     `<li><span><strong>${esc(s.title)}</strong><br><span class="meta">${fmt(s.date)} · ${esc(s.speaker)}</span></span>
      <button data-kind="sermon" data-i="${i}">Remove</button></li>`).join("") || `<li class="meta">None yet.</li>`;
   $("recent-bulletins").innerHTML = bulletins.map(b =>
-    `<li><span><a href="../${esc(b.file)}" target="_blank" rel="noopener">${fmt(b.date)}</a></span>
+    `<li><span><a href="../bulletins.html">${fmt(b.date)}</a></span>
      <button data-kind="bulletin" data-date="${esc(b.date)}">Remove</button></li>`).join("") || `<li class="meta">None yet.</li>`;
 }
 
@@ -229,28 +220,6 @@ $("sermon-form").addEventListener("submit", async e => {
     setTimeout(loadRecent, 60000);
   } catch (err) {
     status("sermon-status", "err", esc(err.message));
-  } finally { btn.disabled = false; }
-});
-
-// ---- bulletin ----
-$("bulletin-form").addEventListener("submit", async e => {
-  e.preventDefault();
-  const btn = e.submitter; btn.disabled = true;
-  const file = $("b-file").files[0], date = $("b-date").value;
-  try {
-    if (file.size > 4 * 1024 * 1024) throw new Error("That PDF is over 4 MB. Try exporting it smaller.");
-    status("bulletin-status", "busy", "Uploading…");
-    const b64 = await new Promise((res, rej) => {
-      const r = new FileReader();
-      r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej;
-      r.readAsDataURL(file);
-    });
-    await api("admin-add-bulletin", { date, pdf: b64 });
-    status("bulletin-status", "ok", `Bulletin for <strong>${fmt(date)}</strong> is posted. It will show on the website in about a minute.`);
-    e.target.reset(); $("b-date").value = nextSunday();
-    setTimeout(loadRecent, 60000);
-  } catch (err) {
-    status("bulletin-status", "err", esc(err.message));
   } finally { btn.disabled = false; }
 });
 

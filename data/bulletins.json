@@ -1,10 +1,154 @@
 [
  {
   "date": "2026-10-11",
-  "file": "bulletins/2026-10-11.pdf"
+  "service": [
+   [
+    "Moderator",
+    "Brenan"
+   ],
+   [
+    "Prayer & Praise",
+    "Johny"
+   ],
+   [
+    "Message",
+    "Brandon Yoder"
+   ],
+   [
+    "Offering",
+    "Pastor Offering"
+   ],
+   [
+    "Host Family",
+    "Brendon & Rose Miller"
+   ],
+   [
+    "Kingdom Family Prayer Focus",
+    "Ben & Katrina Miller"
+   ]
+  ],
+  "sunday_school": [
+   [
+    "Women's",
+    "Rebecca Mullett"
+   ],
+   [
+    "Men's",
+    "Lavern Eash"
+   ]
+  ],
+  "next": {
+   "date": "2026-10-18",
+   "sunday_school": [
+    [
+     "Men's",
+     "Chris"
+    ],
+    [
+     "Women's",
+     "Cheri"
+    ]
+   ],
+   "service": [
+    [
+     "Moderator",
+     "Matt"
+    ],
+    [
+     "Prayer & Praise",
+     ""
+    ],
+    [
+     "Message",
+     "Brendan Miller"
+    ],
+    [
+     "Offering",
+     "General Fund"
+    ],
+    [
+     "Host Family",
+     "Potluck"
+    ],
+    [
+     "Kingdom Family Prayer Focus",
+     ""
+    ]
+   ]
+  }
  },
  {
   "date": "2026-10-04",
-  "file": "bulletins/2026-10-04.pdf"
+  "service": [
+   [
+    "Moderator",
+    "Laverne"
+   ],
+   [
+    "Prayer & Praise",
+    "Selection Sunday"
+   ],
+   [
+    "Message",
+    "Larry Troyer"
+   ],
+   [
+    "Offering",
+    "Mission Fund"
+   ],
+   [
+    "Host Family",
+    "Ben & Katrina Miller"
+   ],
+   [
+    "Kingdom Family Prayer Focus",
+    "Skip"
+   ]
+  ],
+  "sunday_school": [
+   [
+    "",
+    "Prayer & Sharing"
+   ]
+  ],
+  "next": {
+   "date": "2026-10-11",
+   "sunday_school": [
+    [
+     "",
+     "Lavern Eash"
+    ],
+    [
+     "",
+     "Rebecca Mullet"
+    ]
+   ],
+   "service": [
+    [
+     "Moderator",
+     "Austin"
+    ],
+    [
+     "Prayer & Praise",
+     "Worship Team (Austin)"
+    ],
+    [
+     "Message",
+     "Brandon Yoder"
+    ],
+    [
+     "Offering",
+     "Pastor's Offering"
+    ],
+    [
+     "Host Family",
+     "Brendan & Rose Miller"
+    ],
+    [
+     "Kingdom Family Prayer Focus",
+     "Ben & Katrina Miller"
+    ]
+   ]
+  }
  }
 ]
