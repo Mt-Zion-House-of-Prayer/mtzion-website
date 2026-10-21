@@ -35,7 +35,7 @@ only real Mt Zion photos so far. More photos of people and services would help m
 | `sermons.html` | Searchable sermon list (filled from `data/sermons.json`) |
 | `bulletins.html` | Bulletins by year (filled from `data/bulletins.json`) |
 | `beliefs.html` | Statement of Faith (13 points), verbatim from the church's 2023 constitution PDF |
-| `constitution.html` | Constitution (Preamble, Articles I–VIII) + member Guidelines, verbatim, revised 2023 |
+| `constitution.html` | Constitution (Preamble, Articles I–VIII), verbatim, revised 2023 |
 | `css/style.css` | All styling. Colors are variables at the top |
 | `js/site.js` | Renders the lists. Rarely needs editing |
 | `bulletins/` | Bulletin PDFs, named `YYYY-MM-DD.pdf` (the Sunday date). Last 3 months only |
@@ -98,7 +98,7 @@ groups them (it's "Chris Geiser", not "Cris").
 **Change service times / address:** update all four HTML pages (hero, footer,
 visit cards, map links). Times appear as "9:30 AM" and "10:30 AM".
 
-The Statement of Faith and Constitution are the church's official wording — never paraphrase or "improve" them. Source: "Mt Zion Constitution 2023.pdf" in the church Google Drive (Important Documents). If the church revises it, update both pages from the new PDF.
+The Statement of Faith and Constitution are the church's official wording — never paraphrase or "improve" them. Source: "Mt Zion Constitution 2023.pdf" in the church Google Drive (Important Documents). If the church revises it, update both pages from the new PDF. The PDF's third part, the member **Guidelines** (dress, TV, etc.), is deliberately NOT on the website (Austin's decision, Oct 2026) — don't add it without asking.
 
 ## Rules
 
