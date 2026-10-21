@@ -1,8 +1,8 @@
 /**
- * Mt Zion House of Prayer — weekly bulletin → website
+ * Mt Zion House of Prayer - weekly bulletin -> website
  *
  * Lives in the church Google account (mtzhop@gmail.com) at script.google.com.
- * A copy is kept in the website repo (apps-script/Bulletin.gs) — keep them in sync.
+ * A copy is kept in the website repo (apps-script/Bulletin.gs) - keep them in sync.
  *
  * What it does:
  *   createBulletinTemplate()  one time: builds a new bulletin Google Doc whose LEFT side
@@ -10,13 +10,13 @@
  *   postBulletin()            reads the left side and posts it to the website. Runs
  *                             automatically every Saturday evening (installTrigger).
  *                             Emails mtzhop@gmail.com what it posted, or what went wrong.
- *   previewBulletin()         shows what WOULD be posted, without posting (View → Logs).
+ *   previewBulletin()         shows what WOULD be posted, without posting (View -> Logs).
  *   installTrigger()          one time: schedules postBulletin for Saturdays ~8 PM.
  *
  * The right side of the bulletin (Dates to Remember, announcements, birthdays) and the
- * offering amount are NEVER read or sent — only the left column is parsed.
+ * offering amount are NEVER read or sent - only the left column is parsed.
  *
- * Settings (Project Settings → Script properties):
+ * Settings (Project Settings -> Script properties):
  *   BULLETIN_DOC_ID   set automatically by createBulletinTemplate()
  *   ADMIN_PASSWORD    the website's Admin page password (from the church 1Password)
  */
@@ -99,7 +99,8 @@ function createBulletinTemplate() {
 }
 
 function heading(p, t, o = {}) {
-  p.setText(t).setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingBefore(o.space || 0).setSpacingAfter(6);
+  p.setText(t);   // note: setText returns nothing, so it can't be chained
+  p.setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingBefore(o.space || 0).setSpacingAfter(6);
   p.editAsText().setFontFamily(FONT).setFontSize(15).setBold(false).setUnderline(!!o.underline);
   return p;
 }
@@ -142,7 +143,7 @@ function parseBulletin_() {
   let section = null;   // 'today' | 'ss' | 'next' | 'stop'
   for (const raw of leftColumnLines_()) {
     const [left, ...rest] = raw.split('|');
-    const key = left.trim().toLowerCase().replace(/[’`]/g, "'");
+    const key = left.trim().toLowerCase().replace(/[\u2019`]/g, "'");
     const val = rest.join('|').trim();
     if (key.startsWith("today's service") || key.startsWith('todays service')) { section = 'today'; out.date = parseDate_(val); continue; }
     if (key === 'sunday school') { section = 'ss'; continue; }
@@ -156,7 +157,7 @@ function parseBulletin_() {
     else if (section === 'ss' && rest.length === 0) out.sunday_school.push(['', raw]);       // e.g. "Prayer & Sharing"
     else warnings.push('Skipped a line I did not recognize: "' + raw + '"');
   }
-  if (!out.date) throw new Error('Could not find the date on the "Today\'s Service | …" line.');
+  if (!out.date) throw new Error('Could not find the date on the "Today\'s Service | ..." line.');
   if (!out.service.some(p => p[1])) throw new Error("The Today's Service box looks empty.");
   return { bulletin: out, warnings };
 }
@@ -184,17 +185,17 @@ function postBulletin() {
     if (res.getResponseCode() !== 200) throw new Error(data.error || ('Website error ' + res.getResponseCode()));
     if (data.changed) {
       const lines = r.bulletin.service.filter(p => p[1]).map(p => '  ' + p[0] + ': ' + p[1]).join('\n');
-      MailApp.sendEmail(NOTIFY, 'Bulletin posted to the website — ' + r.bulletin.date,
+      MailApp.sendEmail(NOTIFY, 'Bulletin posted to the website - ' + r.bulletin.date,
         'The order of service for ' + r.bulletin.date + ' is on the website (live in about a minute):\n' +
         SITE + '/bulletins\n\n' + lines + (r.warnings.length ? '\n\nNotes:\n  ' + r.warnings.join('\n  ') : '') +
-        '\n\nOnly the left side of the bulletin is posted — no announcements, birthdays, or offering amount.');
+        '\n\nOnly the left side of the bulletin is posted - no announcements, birthdays, or offering amount.');
     }
     return data;
   } catch (e) {
-    MailApp.sendEmail(NOTIFY, '⚠️ Bulletin was NOT posted to the website',
+    MailApp.sendEmail(NOTIFY, 'Bulletin was NOT posted to the website',
       'The weekly bulletin could not be posted:\n\n  ' + e.message +
       '\n\nCheck the left side of the bulletin Google Doc (the "Today\'s Service | date" line and the "Label | name" lines), ' +
-      'then run postBulletin again from script.google.com — or post it from the website Admin page.');
+      'then run postBulletin again from script.google.com - or post it from the website Admin page.');
     throw e;
   }
 }
