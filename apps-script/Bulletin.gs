@@ -58,35 +58,35 @@ function createBulletinTemplate() {
   para(L, '20875 Clutter Rd, Utica, OH 43080  \u00b7  MtZionHouseofPrayer.org', { font: TXT, size: 8, color: SOFT, after: 4 });
   L.appendHorizontalRule();
 
-  para(L, "Today's Service", { font: H, size: 11, color: SOFT, before: 4 });
-  para(L, 'Sunday, October 11, 2026', { font: 'Marcellus', size: 19, after: 6 });
-  rows(L, [['Moderator', 'Brenan'], ['Prayer & Praise', 'Johny'], ['Message', 'Brandon Yoder'],
+  // THIS Sunday, framed: today's service + today's Sunday School
+  const frame = L.appendTable([['']]);
+  frame.setBorderWidth(1).setBorderColor(INK);
+  const F = frame.getCell(0, 0).setPaddingTop(8).setPaddingBottom(8).setPaddingLeft(6).setPaddingRight(6);
+  const fp = F.getChild(0).asParagraph(); fp.setText("Today's Service");
+  style(fp, { font: H, size: 10.5, color: SOFT });
+  para(F, 'Sunday, October 11, 2026', { font: 'Marcellus', size: 18, after: 5 });
+  rows(F, [['Moderator', 'Brenan'], ['Prayer & Praise', 'Johny'], ['Message', 'Brandon Yoder'],
            ['Offering', 'Pastor Offering'], ['Host Family', 'Brendon & Rose Miller'],
            ['Kingdom Family Prayer Focus', 'Ben & Katrina Miller']]);
+  para(F, 'Sunday School  \u00b7  9:30 AM', { font: H, size: 10.5, color: SOFT, before: 6, after: 1 });
+  rows(F, [["Women's", 'Rebecca Mullett'], ["Men's", 'Lavern Eash']]);
 
-  para(L, 'Sunday School  \u00b7  9:30 AM', { font: H, size: 11, color: SOFT, before: 8 });
-  rows(L, [["Women's", 'Rebecca Mullett'], ["Men's", 'Lavern Eash']]);
-
-  const box = L.appendTable([['']]);
-  box.setBorderWidth(1).setBorderColor(INK);
-  const B = box.getCell(0, 0).setPaddingTop(6).setPaddingBottom(4).setPaddingLeft(8).setPaddingRight(8);
-  const bp = B.getChild(0).asParagraph(); bp.setText('Next Sunday');
-  style(bp, { font: H, size: 11, color: SOFT });
-  para(B, 'October 18, 2026', { font: 'Marcellus', size: 14, after: 3 });
-  rows(B, [["Men's", 'Chris'], ["Women's", 'Cheri'], ['Moderator', 'Matt'], ['Prayer & Praise', ''],
+  // Next Sunday: secondary, smaller, no box
+  para(L, 'Next Sunday  \u00b7  October 18, 2026', { font: H, size: 10.5, color: SOFT, before: 10, after: 1 });
+  rows(L, [["Men's", 'Chris'], ["Women's", 'Cheri'], ['Moderator', 'Matt'], ['Prayer & Praise', ''],
            ['Message', 'Brendan Miller'], ['Offering', 'General Fund'], ['Host Family', 'Potluck'],
-           ['Kingdom Family Prayer Focus', '']], 10);
+           ['Kingdom Family Prayer Focus', '']], 9.5);
 
-  para(L, "Last Sunday's offering:  ", { font: TXT, size: 8.5, color: SOFT, before: 6, align: 'LEFT' });
+  para(L, "Last Sunday's offering:  ", { font: TXT, size: 8, color: SOFT, before: 4, align: 'LEFT' });
 
   // ===== RIGHT: church-only (never read by the script) =====
   // Three boxes with space reserved, so lines can be added to one without moving the
   // others (until a box is completely full). The left side is a separate column and
   // never moves.
-  reservedBox(R, 'Dates to Remember', 170, [['Prayer Meeting', 'Wednesday @ 7:00 PM'], ['Communion', 'Sunday, November 1']]);
+  reservedBox(R, 'Dates to Remember', 165, [['Prayer Meeting', 'Wednesday @ 7:00 PM'], ['Communion', 'Sunday, November 1']]);
   R.removeChild(R.getChild(0));   // drop the cell's empty starter line (now that the box is in)
-  reservedBox(R, 'Announcements', 120, [], 10);
-  reservedBox(R, 'Birthdays & Anniversaries', 92, [], 10);
+  reservedBox(R, 'Announcements', 115, [], 10);
+  reservedBox(R, 'Birthdays & Anniversaries', 88, [], 10);
   para(R, 'To have announcements added to the bulletin, send them in by Friday evening.',
        { font: TXT, size: 8.5, color: SOFT, italic: true, before: 8 });
   para(R, '\u201cMine house shall be called an house of prayer for all people.\u201d  Isaiah 56:7',
@@ -103,18 +103,22 @@ function createBulletinTemplate() {
 function style(p, o) {
   const al = DocumentApp.HorizontalAlignment[o.align || 'CENTER'];
   p.setAlignment(al).setSpacingBefore(o.before || 0).setSpacingAfter(o.after || 0).setLineSpacing(1);
+  // empty lines still get the font/size, so blank rows are the same height as filled ones
+  const A = DocumentApp.Attribute, at = {}; at[A.FONT_FAMILY] = o.font || TXT; at[A.FONT_SIZE] = o.size || 11;
+  p.setAttributes(at);
   if (p.getText()) p.editAsText().setFontFamily(o.font || TXT).setFontSize(o.size || 11)
     .setForegroundColor(o.color || INK).setBold(!!o.bold).setItalic(!!o.italic).setUnderline(false);
   return p;
 }
 function para(container, t, o = {}) { return style(container.appendParagraph(t), o); }
-// A box with a black header bar and a body row that reserves `height` points of space.
+// A soft box: thin gray border, light gray header strip, and a body row that reserves
+// `height` points of space so lines can be added without moving what's below.
 function reservedBox(container, title, height, items, gapBefore) {
   if (gapBefore) para(container, ' ', { size: 4 });
   const t = container.appendTable([[title], ['']]);
-  t.setBorderWidth(1).setBorderColor(INK);
-  const h = t.getCell(0, 0).setBackgroundColor(INK).setPaddingTop(4).setPaddingBottom(4);
-  style(h.getChild(0).asParagraph(), { font: H, size: 13, color: '#ffffff' });
+  t.setBorderWidth(0.75).setBorderColor('#9a9a9a');
+  const h = t.getCell(0, 0).setBackgroundColor('#ececec').setPaddingTop(3).setPaddingBottom(3);
+  style(h.getChild(0).asParagraph(), { font: H, size: 12 });
   t.getRow(1).setMinimumHeight(height);
   const b = t.getCell(1, 0).setPaddingTop(6).setPaddingLeft(8).setPaddingRight(8);
   const first = b.getChild(0).asParagraph();
@@ -133,12 +137,12 @@ function section(container, t) {
 // Two-column rows: role (small caps, right-aligned) | name. Names are typed in the right column.
 function rows(container, pairs, size) {
   const t = container.appendTable(pairs);
-  t.setBorderWidth(0).setColumnWidth(0, 150);
+  t.setBorderWidth(0).setColumnWidth(0, 168);
   for (let r = 0; r < t.getNumRows(); r++) {
-    const k = t.getCell(r, 0).setPaddingTop(2).setPaddingBottom(2).setPaddingRight(10);
-    const v = t.getCell(r, 1).setPaddingTop(2).setPaddingBottom(2);
-    style(k.getChild(0).asParagraph(), { font: H, size: (size || 11) - 0.5, color: SOFT, align: 'RIGHT' });
-    style(v.getChild(0).asParagraph(), { font: TXT, size: size || 11.5, align: 'LEFT' });
+    const k = t.getCell(r, 0).setPaddingTop(1.5).setPaddingBottom(1.5).setPaddingRight(8);
+    const v = t.getCell(r, 1).setPaddingTop(1.5).setPaddingBottom(1.5);
+    style(k.getChild(0).asParagraph(), { font: H, size: (size || 11) - 1.5, color: SOFT, align: 'RIGHT' });
+    style(v.getChild(0).asParagraph(), { font: TXT, size: size || 11, align: 'LEFT' });
   }
   return t;
 }
@@ -175,7 +179,7 @@ function leftColumnItems_() {
 }
 
 function parseDate_(s, fallbackFrom) {
-  const clean = String(s || '').replace(/^\s*(sun|sunday)\.?,?\s*/i, '').replace(/\s+,/g, ',')
+  const clean = String(s || '').replace(/^[^A-Za-z0-9]+/, '').replace(/^\s*(sun|sunday)\.?,?\s*/i, '').replace(/\s+,/g, ',')
     .replace(/(\d+)(st|nd|rd|th)\b/i, '$1').trim();
   if (!/\d/.test(clean)) return '';
   let d = new Date(clean);
