@@ -49,6 +49,10 @@ const CLASS_LABELS = {
 const SC = 'Alegreya Sans SC', SANS = 'Alegreya Sans', SOFTGRAY = '#999999';
 
 function createBulletinTemplate() {
+  // Safety: never swap out a bulletin that's already in use (it may have hand-made formatting).
+  const existing = PropertiesService.getScriptProperties().getProperty('BULLETIN_DOC_ID');
+  if (existing) throw new Error('A bulletin is already set up: https://docs.google.com/document/d/' + existing +
+    '/edit  -- the script will keep using it. To really start a new one, delete BULLETIN_DOC_ID in Project Settings first.');
   const doc = DocumentApp.create('Mt Zion Bulletin (editable)');
   const body = doc.getBody();
   body.setPageWidth(792).setPageHeight(612)                 // US Letter, landscape
@@ -189,8 +193,9 @@ function scheduleFor_(iso) {
   return null;
 }
 
-// Fills the bulletin's LEFT side for the coming Sunday from the schedule sheet, then
-// emails mtzhop@gmail.com to review it. The right side is never touched.
+// Fills the bulletin's LEFT side for the coming Sunday from the schedule sheet, IN PLACE:
+// only the names/dates after "|" or "-" are replaced, so any fonts, sizes, or spacing set
+// by hand in the Doc are kept. The right side is never touched. Then emails a review note.
 function fillBulletinFromSheet() {
   try {
     const date = nextSunday_(), next = nextSunday_(new Date(date + 'T12:00:00'));
@@ -198,12 +203,33 @@ function fillBulletinFromSheet() {
     let after = null;
     try { after = scheduleFor_(next); } catch (e) { /* e.g. next year's tab doesn't exist yet */ }
     if (!today) throw new Error('No row for ' + longDate_(date) + ' in the schedule spreadsheet.');
+    after = after || { service: {}, ss: {} };
+
     const id = PropertiesService.getScriptProperties().getProperty('BULLETIN_DOC_ID');
     const doc = DocumentApp.openById(id);
-    const L = doc.getBody().getTables()[0].getCell(0, 0);
-    L.clear();
-    buildLeft_(L, { date, service: today.service, ss: today.ss,
-                    next: { date: next, service: (after || {}).service || {}, ss: (after || {}).ss || {} } });
+    const missing = [];
+    let section = null;   // outside the box: 'ss' | 'nextss' | 'next'
+    for (const it of leftColumnParas_(doc)) {
+      const p = it.para, t = p.getText();
+      const bar = t.indexOf('|');
+      const key = norm_(bar >= 0 ? t.slice(0, bar) : t);
+      if (it.inBox) {
+        if (key.startsWith("today's service") || key.startsWith('todays service')) setAfter_(p, bar, longDate_(date));
+        else if (bar >= 0 && SERVICE_LABELS[key]) setAfter_(p, bar, today.service[SERVICE_LABELS[key]] || '');
+        continue;
+      }
+      if (key.startsWith('last sunday')) break;
+      if (key === 'sunday school') { section = 'ss'; continue; }
+      if (key.startsWith('next sunday')) {
+        const comma = t.indexOf(',');
+        if (comma >= 0 || /\d/.test(t)) { section = 'nextss'; if (comma >= 0) setAfter_(p, comma, longDate_(next, true)); }
+        else section = 'next';
+        continue;
+      }
+      if (section === 'next' && bar >= 0 && SERVICE_LABELS[key]) setAfter_(p, bar, after.service[SERVICE_LABELS[key]] || '');
+      else if (section === 'ss') fillClasses_(p, today.ss);
+      else if (section === 'nextss') fillClasses_(p, after.ss);
+    }
     doc.saveAndClose();
     const blanks = ORDER_.filter(k => !today.service[k]);
     MailApp.sendEmail(NOTIFY, 'Bulletin draft ready to review - ' + longDate_(date),
@@ -217,6 +243,57 @@ function fillBulletinFromSheet() {
       'The Friday auto-fill did not run:\n\n  ' + e.message + '\n\nThe bulletin was not changed; fill it in by hand as usual.');
     throw e;
   }
+}
+
+// Replace everything after position `at` (the "|" or ",") with " value", keeping the
+// formatting of the text that was there (new text takes on the style of what precedes it).
+function setAfter_(p, at, value) {
+  if (at < 0) return;
+  const text = p.editAsText(), len = text.getText().length;
+  if (len - 1 > at) text.deleteText(at + 1, len - 1);
+  text.insertText(at + 1, ' ' + value);
+}
+
+// "Women's - Cherie \ Men's - Chris": replace each name after its class label, in place.
+// If the sheet has nothing for a class, the name is cleared (so last week's doesn't linger).
+function fillClasses_(p, ss) {
+  const text = p.editAsText();
+  const labels = Object.keys(CLASS_LABELS);
+  let s = text.getText();
+  const re = /([A-Za-z\u2019']+)\s*-\s*([^\\\/]*)/g;
+  const edits = [];
+  let m;
+  while ((m = re.exec(s))) {
+    const cls = CLASS_LABELS[norm_(m[1])];
+    if (!cls) continue;
+    const start = m.index + m[0].length - m[2].length;
+    const end = start + m[2].replace(/\s+$/, '').length - 1;
+    edits.push([start, end, ss[cls] || '']);
+  }
+  edits.reverse().forEach(([start, end, v]) => {        // right to left, so indexes stay valid
+    if (end >= start) text.deleteText(start, end);
+    if (v) text.insertText(start, v);
+  });
+}
+
+// Like leftColumnItems_, but returns the paragraphs themselves (so they can be edited).
+function leftColumnParas_(doc) {
+  const tables = doc.getBody().getTables();
+  if (!tables.length) throw new Error('The bulletin layout changed: the two-column page table is missing.');
+  const out = [];
+  (function walk(el, inBox) {
+    for (let i = 0; i < el.getNumChildren(); i++) {
+      const c = el.getChild(i), type = c.getType();
+      if (type === DocumentApp.ElementType.PARAGRAPH || type === DocumentApp.ElementType.LIST_ITEM) {
+        if (c.asText().getText().trim()) out.push({ para: c, inBox });
+      } else if (type === DocumentApp.ElementType.TABLE) {
+        const tb = c.asTable();
+        for (let r = 0; r < tb.getNumRows(); r++)
+          for (let k = 0; k < tb.getRow(r).getNumCells(); k++) walk(tb.getRow(r).getCell(k), true);
+      }
+    }
+  })(tables[0].getCell(0, 0), false);
+  return out;
 }
 
 function fmt(p, o) {
