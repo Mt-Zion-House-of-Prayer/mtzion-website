@@ -80,27 +80,17 @@ function createBulletinTemplate() {
   para(L, "Last Sunday's offering:  ", { font: TXT, size: 8.5, color: SOFT, before: 6, align: 'LEFT' });
 
   // ===== RIGHT: church-only (never read by the script) =====
-  const dates = R.appendTable([['Dates to Remember'], ['']]);
-  dates.setBorderWidth(1).setBorderColor(INK);
-  const dh = dates.getCell(0, 0).setBackgroundColor(INK).setPaddingTop(5).setPaddingBottom(5);
-  style(dh.getChild(0).asParagraph(), { font: H, size: 14, color: '#ffffff' });
-  dates.getRow(1).setMinimumHeight(215);
-  const db = dates.getCell(1, 0).setPaddingTop(8);
-  const dp = db.getChild(0).asParagraph(); dp.setText('Prayer Meeting');
-  style(dp, { font: TXT, size: 11, bold: true });
-  para(db, 'Wednesday @ 7:00 PM', { font: TXT, size: 10.5, italic: true, after: 8 });
-  para(db, 'Communion', { font: TXT, size: 11, bold: true });
-  para(db, 'Sunday, November 1', { font: TXT, size: 10.5, italic: true, after: 8 });
-  R.removeChild(R.getChild(0));
-
-  section(R, 'Announcements');
-  para(R, ' ', { font: TXT, size: 11, after: 30, align: 'LEFT' });
-  section(R, 'Birthdays & Anniversaries');
-  para(R, ' ', { font: TXT, size: 11, after: 30, align: 'LEFT' });
+  // Three boxes with space reserved, so lines can be added to one without moving the
+  // others (until a box is completely full). The left side is a separate column and
+  // never moves.
+  box(R, 'Dates to Remember', 170, [['Prayer Meeting', 'Wednesday @ 7:00 PM'], ['Communion', 'Sunday, November 1']]);
+  R.removeChild(R.getChild(0));   // drop the cell's empty starter line (now that the box is in)
+  box(R, 'Announcements', 120, [], 10);
+  box(R, 'Birthdays & Anniversaries', 92, [], 10);
   para(R, 'To have announcements added to the bulletin, send them in by Friday evening.',
-       { font: TXT, size: 8.5, color: SOFT, italic: true, before: 6 });
+       { font: TXT, size: 8.5, color: SOFT, italic: true, before: 8 });
   para(R, '\u201cMine house shall be called an house of prayer for all people.\u201d  Isaiah 56:7',
-       { font: 'Marcellus', size: 9, color: SOFT, before: 10 });
+       { font: 'Marcellus', size: 9, color: SOFT, before: 6 });
 
   const first = body.getChild(0);
   if (first.getType() === DocumentApp.ElementType.PARAGRAPH && !first.asParagraph().getText()) first.removeFromParent();
@@ -118,6 +108,24 @@ function style(p, o) {
   return p;
 }
 function para(container, t, o = {}) { return style(container.appendParagraph(t), o); }
+// A box with a black header bar and a body row that reserves `height` points of space.
+function box(container, title, height, items, gapBefore) {
+  if (gapBefore) para(container, ' ', { size: 4 });
+  const t = container.appendTable([[title], ['']]);
+  t.setBorderWidth(1).setBorderColor(INK);
+  const h = t.getCell(0, 0).setBackgroundColor(INK).setPaddingTop(4).setPaddingBottom(4);
+  style(h.getChild(0).asParagraph(), { font: H, size: 13, color: '#ffffff' });
+  t.getRow(1).setMinimumHeight(height);
+  const b = t.getCell(1, 0).setPaddingTop(6).setPaddingLeft(8).setPaddingRight(8);
+  const first = b.getChild(0).asParagraph();
+  if (!items.length) { first.setText(' '); style(first, { font: TXT, size: 11 }); return t; }
+  items.forEach(([what, when], i) => {
+    const p = i === 0 ? first : b.appendParagraph('');
+    p.setText(what); style(p, { font: TXT, size: 11, bold: true, before: i ? 6 : 0 });
+    para(b, when, { font: TXT, size: 10.5, italic: true });
+  });
+  return t;
+}
 function section(container, t) {
   para(container, t, { font: H, size: 14, before: 14, after: 2 });
   container.appendHorizontalRule();
