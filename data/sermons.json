@@ -1,5 +1,16 @@
 [
  {
+  "date": "2026-10-25",
+  "title": "Salt & Light",
+  "speaker": "Brendan Miller",
+  "type": "Sunday Message",
+  "passage": "Matt 5",
+  "length": "00:36:38",
+  "audio": "https://pub-81b2f2e5fa874aab865759c94d16b937.r2.dev/sermons/2026/2026-10-25-salt-light.mp3",
+  "size": 26646764,
+  "guid": "mtzion-2026-10-25-salt-light"
+ },
+ {
   "date": "2026-09-13",
   "title": "Looking to Jesus",
   "speaker": "Austin Miller",
@@ -232,7 +243,7 @@
  },
  {
   "date": "2025-11-23",
-  "title": "God\u2019s Longsuffering Love",
+  "title": "God’s Longsuffering Love",
   "speaker": "Brandon Yoder",
   "type": "Sunday Message",
   "passage": "",
@@ -364,7 +375,7 @@
  },
  {
   "date": "2025-06-15",
-  "title": "\u201cTime is a Gift, Not a Guarantee\u201d",
+  "title": "“Time is a Gift, Not a Guarantee”",
   "speaker": "Larry Troyer",
   "type": "Sunday Message",
   "passage": "",
@@ -452,7 +463,7 @@
  },
  {
   "date": "2025-02-23",
-  "title": "\u201cA Still More Excellent way\u201d",
+  "title": "“A Still More Excellent way”",
   "speaker": "Mervin Charles",
   "type": "Sunday Message",
   "passage": "1 Corinthians 12:31,13,14:1,Exodus 4",
@@ -496,7 +507,7 @@
  },
  {
   "date": "2025-01-26",
-  "title": "\u201cFollowing the Follower\u201d",
+  "title": "“Following the Follower”",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "John 5:16-23",
@@ -540,7 +551,7 @@
  },
  {
   "date": "2024-12-08",
-  "title": "The Lord\u2019s Peace",
+  "title": "The Lord’s Peace",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -551,7 +562,7 @@
  },
  {
   "date": "2024-11-24",
-  "title": "God\u2019s Great Grace and Mercy",
+  "title": "God’s Great Grace and Mercy",
   "speaker": "Mervin Charles",
   "type": "Sunday Message",
   "passage": "",
@@ -639,7 +650,7 @@
  },
  {
   "date": "2024-09-15",
-  "title": "The Kingdom of Heaven is At Hand \u2013 LaVerne Eash",
+  "title": "The Kingdom of Heaven is At Hand – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -650,7 +661,7 @@
  },
  {
   "date": "2024-09-08",
-  "title": "For God So Loved The World \u2013 Austin Miller",
+  "title": "For God So Loved The World – Austin Miller",
   "speaker": "Austin Miller",
   "type": "Sunday Message",
   "passage": "",
@@ -661,7 +672,7 @@
  },
  {
   "date": "2024-08-25",
-  "title": "God\u2019s Abundant Grace \u2013 LaVerne Eash",
+  "title": "God’s Abundant Grace – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "",
   "passage": "1 Timothy 1",
@@ -672,7 +683,7 @@
  },
  {
   "date": "2024-08-18",
-  "title": "The Presence of God \u2013 Brendan Miller",
+  "title": "The Presence of God – Brendan Miller",
   "speaker": "Brendan Miller",
   "type": "Sunday Message",
   "passage": "Revelation 15",
@@ -683,7 +694,7 @@
  },
  {
   "date": "2024-08-04",
-  "title": "Be the Influence \u2013 LaVerne Eash",
+  "title": "Be the Influence – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "Timothy",
@@ -694,7 +705,7 @@
  },
  {
   "date": "2024-07-21",
-  "title": "The Gospel \u2013 Bryant Stoltzfus",
+  "title": "The Gospel – Bryant Stoltzfus",
   "speaker": "Bryant Stoltzfus",
   "type": "",
   "passage": "Ephesians 2;1-10",
@@ -705,7 +716,7 @@
  },
  {
   "date": "2024-06-30",
-  "title": "The Fall of Babylon \u2013 Brendan Miller",
+  "title": "The Fall of Babylon – Brendan Miller",
   "speaker": "Brendan Miller",
   "type": "",
   "passage": "Revelation 14:6-13",
@@ -716,7 +727,7 @@
  },
  {
   "date": "2024-06-23",
-  "title": "Jesus the Healer \u2013 LaVerne Eash",
+  "title": "Jesus the Healer – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -727,7 +738,7 @@
  },
  {
   "date": "2024-06-16",
-  "title": "The Fear of the Lord \u2013 Austin Miller",
+  "title": "The Fear of the Lord – Austin Miller",
   "speaker": "Austin Miller",
   "type": "Sunday Message",
   "passage": "Proverbs",
@@ -738,7 +749,7 @@
  },
  {
   "date": "2024-06-09",
-  "title": "Becoming Fresh Through God \u2013 Brendan Miller",
+  "title": "Becoming Fresh Through God – Brendan Miller",
   "speaker": "Brendan Miller",
   "type": "",
   "passage": "",
@@ -749,7 +760,7 @@
  },
  {
   "date": "2024-06-02",
-  "title": "Purposing to Grasp God\u2019s Ways \u2013 Larry Troyer",
+  "title": "Purposing to Grasp God’s Ways – Larry Troyer",
   "speaker": "Larry Troyer",
   "type": "Sunday Message",
   "passage": "",
@@ -760,7 +771,7 @@
  },
  {
   "date": "2024-05-26",
-  "title": "Pastoral Letters \u2013 LaVerne Eash",
+  "title": "Pastoral Letters – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "Titus",
@@ -771,7 +782,7 @@
  },
  {
   "date": "2024-05-19",
-  "title": "\u201cAnd God Said\u201d",
+  "title": "“And God Said”",
   "speaker": "Austin Miller",
   "type": "Sunday Message",
   "passage": "",
@@ -782,7 +793,7 @@
  },
  {
   "date": "2024-05-12",
-  "title": "Mother\u2019s Day sermon",
+  "title": "Mother’s Day sermon",
   "speaker": "",
   "type": "Sunday Message",
   "passage": "",
@@ -793,7 +804,7 @@
  },
  {
   "date": "2024-05-05",
-  "title": "Stuck \u2013 LaVerne Eash",
+  "title": "Stuck – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -804,7 +815,7 @@
  },
  {
   "date": "2024-04-14",
-  "title": "The Spirit of the Antichrist \u2013 Brendan Miller",
+  "title": "The Spirit of the Antichrist – Brendan Miller",
   "speaker": "Brendan Miller",
   "type": "",
   "passage": "",
@@ -815,7 +826,7 @@
  },
  {
   "date": "2024-04-07",
-  "title": "Good Things \u2013 LaVerne Eash",
+  "title": "Good Things – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -837,7 +848,7 @@
  },
  {
   "date": "2024-03-24",
-  "title": "Zealous for Good Works \u2013 LaVerne Eash",
+  "title": "Zealous for Good Works – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "Titus",
@@ -903,7 +914,7 @@
  },
  {
   "date": "2024-02-11",
-  "title": "The Value of God\u2019s Love",
+  "title": "The Value of God’s Love",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -1123,7 +1134,7 @@
  },
  {
   "date": "2023-08-27",
-  "title": "Separated \u2013 LaVerne Eash",
+  "title": "Separated – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -1244,7 +1255,7 @@
  },
  {
   "date": "2023-04-02",
-  "title": "More Than Morality \u2013 LaVerne Eash",
+  "title": "More Than Morality – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "Proverbs 29",
@@ -1255,7 +1266,7 @@
  },
  {
   "date": "2023-03-26",
-  "title": "The letter to the Church of Thyatira \u2013 Brendan Miller",
+  "title": "The letter to the Church of Thyatira – Brendan Miller",
   "speaker": "Brendan Miller",
   "type": "Sunday Message",
   "passage": "Revelation 2:18-29",
@@ -1266,7 +1277,7 @@
  },
  {
   "date": "2023-03-12",
-  "title": "Entitlement Toxicity \u2013 Austin Miller",
+  "title": "Entitlement Toxicity – Austin Miller",
   "speaker": "Austin Miller",
   "type": "Sunday Message",
   "passage": "",
@@ -1310,7 +1321,7 @@
  },
  {
   "date": "2023-02-12",
-  "title": "Discipleship \u2013 LaVerne Eash",
+  "title": "Discipleship – LaVerne Eash",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -1365,7 +1376,7 @@
  },
  {
   "date": "2023-01-08",
-  "title": "Paradise \u2013 Brendan Miller",
+  "title": "Paradise – Brendan Miller",
   "speaker": "Brendan Miller",
   "type": "",
   "passage": "",
@@ -1376,7 +1387,7 @@
  },
  {
   "date": "2022-12-18",
-  "title": "Journey into Egypt \u2013 LaVerne Eash",
+  "title": "Journey into Egypt – LaVerne Eash",
   "speaker": "",
   "type": "Sunday Message",
   "passage": "",
@@ -1552,7 +1563,7 @@
  },
  {
   "date": "2022-07-03",
-  "title": "History in the Christian Life \u2013 Brendan Miller",
+  "title": "History in the Christian Life – Brendan Miller",
   "speaker": "Brendan Miller",
   "type": "Sunday Message",
   "passage": "",
@@ -2091,7 +2102,7 @@
  },
  {
   "date": "2021-05-09",
-  "title": "Mother\u2019s Day",
+  "title": "Mother’s Day",
   "speaker": "Dave Troyer",
   "type": "Sunday Message",
   "passage": "",
@@ -2190,7 +2201,7 @@
  },
  {
   "date": "2021-03-21",
-  "title": "Answering God\u2019s Calling",
+  "title": "Answering God’s Calling",
   "speaker": "Dave Troyer",
   "type": "Sunday Message",
   "passage": "",
@@ -2201,7 +2212,7 @@
  },
  {
   "date": "2021-03-14",
-  "title": "The Gifting\u2019s of Pastors & Elders",
+  "title": "The Gifting’s of Pastors & Elders",
   "speaker": "Brendan Miller",
   "type": "Sunday Message",
   "passage": "",
@@ -2300,7 +2311,7 @@
  },
  {
   "date": "2021-01-03",
-  "title": "The Lord\u2019s Prayer",
+  "title": "The Lord’s Prayer",
   "speaker": "LaVerne Eash",
   "type": "Sunday Message",
   "passage": "",
@@ -2344,7 +2355,7 @@
  },
  {
   "date": "2020-12-06",
-  "title": "Plaintiff\u2019s or Defendants",
+  "title": "Plaintiff’s or Defendants",
   "speaker": "Dave Troyer",
   "type": "Sunday Message",
   "passage": "",
@@ -2718,7 +2729,7 @@
  },
  {
   "date": "2019-10-06",
-  "title": "Road to Emmaus \u2013 Communion (The Three Gardens Series)",
+  "title": "Road to Emmaus – Communion (The Three Gardens Series)",
   "speaker": "Joe Bacher",
   "type": "Meeting Series",
   "passage": "",
